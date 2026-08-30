@@ -1,0 +1,12 @@
+### Add a bin
+POST http://localhost:8080/bins
+Content-Type: application/json
+
+{
+  "location": "Chennai",
+  "latitude": 13.0827,
+  "longitude": 80.2707,
+  "capacity": 100,
+  "fillLevel": 50,
+  "status": "AVAILABLE"
+}

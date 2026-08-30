@@ -1,0 +1,5367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Waste Management</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #176b3a;
+            --primary-dark: #0e4d29;
+            --secondary: #e8f5ec;
+            --background: #f4f7f5;
+            --card: #ffffff;
+            --text: #17251b;
+            --muted: #6c776f;
+            --border: #dce5de;
+            --danger: #d32f2f;
+            --warning: #ed9b00;
+            --blue: #1976d2;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        body.dark {
+            --background: #121714;
+            --card: #1d2520;
+            --text: #f2f7f3;
+            --muted: #aab7ae;
+            --border: #344139;
+            --secondary: #26352b;
+        }
+
+        body.large-font {
+            font-size: 18px;
+        }
+
+        body.high-contrast {
+            --primary: #000;
+            --primary-dark: #000;
+            --background: #fff;
+            --card: #fff;
+            --text: #000;
+            --muted: #000;
+            --border: #000;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        #authScreen {
+            position: fixed;
+            inset: 0;
+            background: #f4f7f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+
+        .auth-card {
+            width: 390px;
+            max-width: 92%;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 15px 50px rgba(0,0,0,.15);
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-logo-icon {
+            font-size: 50px;
+        }
+
+        .auth-logo h2 {
+            color: #176b3a;
+        }
+
+        .auth-logo p {
+            color: #6c776f;
+            margin-top: 5px;
+        }
+
+        .auth-title {
+            margin-bottom: 18px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #dce5de;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: #176b3a;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #176b3a;
+            color: white;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 18px;
+            color: #6c776f;
+        }
+
+        .auth-switch button {
+            border: 0;
+            background: none;
+            color: #176b3a;
+            font-weight: bold;
+        }
+
+        #authMessage {
+            display: none;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            background: var(--primary-dark);
+            color: white;
+            padding: 22px 15px;
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 5px;
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: #4caf50;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .brand h2 {
+            font-size: 18px;
+        }
+
+        .brand small {
+            color: #c9dfce;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #9fbea8;
+            margin: 20px 10px 8px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu button {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #dceade;
+            text-align: left;
+            padding: 13px 14px;
+            border-radius: 9px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .menu button:hover,
+        .menu button.active {
+            background: #28663d;
+            color: white;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 25px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+
+        .topbar h1 {
+            font-size: 28px;
+        }
+
+        .topbar p {
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .admin {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 10px;
+            transition: .2s;
+        }
+
+        .admin-info:hover {
+            background: var(--secondary);
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =========================
+           PROFILE DROPDOWN
+        ========================= */
+
+        .profile-dropdown {
+            position: absolute;
+            top: 58px;
+            right: 0;
+            width: 320px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 15px 45px rgba(0,0,0,.15);
+            padding: 20px;
+            display: none;
+            z-index: 2000;
+        }
+
+        .profile-dropdown.open {
+            display: block;
+        }
+
+        .profile-dropdown h3 {
+            margin-bottom: 14px;
+            color: var(--primary);
+        }
+
+        .profile-field {
+            margin-bottom: 12px;
+        }
+
+        .profile-field label {
+            display: block;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .profile-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .profile-actions .btn {
+            flex: 1;
+        }
+
+        #profileMessage {
+            display: none;
+            padding: 9px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .profile-divider {
+            border-top: 1px solid var(--border);
+            margin: 16px 0;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.05);
+        }
+
+        .stat-icon {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .stat-title {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           PANELS
+        ========================= */
+
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 22px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .panel-header h2 {
+            font-size: 19px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            opacity: .9;
+        }
+
+        .btn.secondary {
+            background: #607d68;
+        }
+
+        .btn.danger {
+            background: var(--danger);
+        }
+
+        .btn.gps {
+            background: var(--blue);
+        }
+
+        .btn.track {
+            background: #1976d2;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn.stop-track {
+            background: #d32f2f;
+        }
+
+        /* =========================
+           MAP
+        ========================= */
+
+        #map,
+        #trackingMap {
+            width: 100%;
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .live-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #258345;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            width: 9px;
+            height: 9px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                opacity: .25;
+            }
+        }
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .search {
+            width: 300px;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        /* =========================
+           VEHICLES
+        ========================= */
+
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .vehicle-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            background: var(--card);
+            transition: .2s;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 18px rgba(0,0,0,.08);
+        }
+
+        .vehicle-card.selected {
+            border: 2px solid #1976d2;
+            box-shadow: 0 0 0 3px rgba(25,118,210,.12);
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .truck {
+            font-size: 38px;
+        }
+
+        .vehicle-number {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .vehicle-name {
+            font-weight: bold;
+            margin-top: 13px;
+        }
+
+        .vehicle-detail {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 7px;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status.collecting {
+            background: #fff0c2;
+            color: #765900;
+        }
+
+        .status.available {
+            background: #daf2df;
+            color: #17642b;
+        }
+
+        .status.offline {
+            background: #eeeeee;
+            color: #555;
+        }
+
+        /* =========================
+           GPS
+        ========================= */
+
+        .gps-panel {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            background: var(--secondary);
+        }
+
+        .gps-panel h3 {
+            margin-bottom: 8px;
+        }
+
+        .gps-panel p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .gps-controls {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .gps-controls label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .gps-controls select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        #gpsStatus {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           TRACKING INFO
+        ========================= */
+
+        .tracking-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .tracking-info-card {
+            background: var(--secondary);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .tracking-info-card small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .tracking-info-card strong {
+            font-size: 14px;
+        }
+
+        .tracking-selected {
+            padding: 12px 15px;
+            background: #e3f2fd;
+            color: #0d47a1;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           BINS
+        ========================= */
+
+        .bin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .bin-card {
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 12px;
+            background: var(--card);
+        }
+
+        .bin-icon {
+            font-size: 35px;
+        }
+
+        .bin-location {
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .bin-info {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .progress {
+            height: 9px;
+            background: #e5eae6;
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #4caf50;
+        }
+
+        .progress-warning {
+            background: var(--warning);
+        }
+
+        .progress-danger {
+            background: var(--danger);
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        /* =========================
+           SETTINGS
+        ========================= */
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .setting-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .setting-card h3 {
+            margin-bottom: 7px;
+            color: var(--primary);
+        }
+
+        .setting-card > p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-row:last-child {
+            border-bottom: 0;
+        }
+
+        /* =========================
+           SWITCH
+        ========================= */
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 25px;
+            display: inline-block;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #bbb;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .slider:before {
+            content: "";
+            width: 19px;
+            height: 19px;
+            background: white;
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            border-radius: 50%;
+            transition: .25s;
+        }
+
+        .switch input:checked + .slider {
+            background: #2e7d32;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(23px);
+        }
+
+        /* =========================
+           ACCESSIBILITY
+        ========================= */
+
+        .accessibility-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .accessibility-box button {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        #message {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            background: #d9f2df;
+            color: #17642b;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width:1100px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .vehicle-grid,
+            .bin-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tracking-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:750px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .stats,
+            .vehicle-grid,
+            .bin-grid,
+            .form-grid,
+            .settings-grid,
+            .tracking-info {
+                grid-template-columns: 1fr;
+            }
+
+            .gps-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search {
+                width: 100%;
+            }
+
+            #map,
+            #trackingMap {
+                height: 400px;
+            }
+
+            .profile-dropdown {
+                width: 90vw;
+                right: 5vw;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN
+========================= -->
+
+<div id="authScreen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+
+            <div class="auth-logo-icon">
+                ♻️
+            </div>
+
+            <h2>SmartWaste</h2>
+
+            <p>
+                Management System
+            </p>
+
+        </div>
+
+        <div id="loginBox">
+
+            <h3 class="auth-title">
+                🔐 Login
+            </h3>
+
+            <input
+                    id="loginEmail"
+                    class="auth-input"
+                    type="email"
+                    placeholder="Email">
+
+            <input
+                    id="loginPassword"
+                    class="auth-input"
+                    type="password"
+                    placeholder="Password">
+
+            <button
+                    class="auth-btn"
+                    onclick="loginUser()">
+                Login
+            </button>
+
+            <div class="auth-switch">
+
+                Don't have an account?
+
+                <button onclick="showSignup()">
+                    Sign Up
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="signupBox" style="display:none">
+
+            <h3 class="auth-title">
+                📝 Create Account
+            </h3>
+
+            <input
+                    id="signupName"
+                    class="auth-input"
+                    type="text"
+                    placeholder="Full Name">
+
+            <input
+                    id="signupEmail"
+                    class="auth-input"
+                    type="email"
+                    placeholder="Email">
+
+            <input
+                    id="signupPassword"
+                    class="auth-input"
+                    type="password"
+                    placeholder="Password">
+
+            <input
+                    id="signupConfirmPassword"
+                    class="auth-input"
+                    type="password"
+                    placeholder="Confirm Password">
+
+            <button
+                    class="auth-btn"
+                    onclick="signupUser()">
+                Create Account
+            </button>
+
+            <div class="auth-switch">
+
+                Already have an account?
+
+                <button onclick="showLogin()">
+                    Login
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="authMessage"></div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ♻️
+        </div>
+
+        <div>
+
+            <h2>SmartWaste</h2>
+
+            <small>
+                Management System
+            </small>
+
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        Main Menu
+    </div>
+
+    <nav class="menu">
+
+        <button
+                id="dashboardBtn"
+                class="active"
+                onclick="showPage('dashboard',this)">
+            📊 Dashboard
+        </button>
+
+        <button
+                onclick="showPage('bins',this)">
+            🗑️ Waste Bins
+        </button>
+
+        <button
+                id="vehiclesBtn"
+                onclick="showPage('vehicles',this)">
+            🚛 Vehicles
+        </button>
+
+        <button
+                id="trackingBtn"
+                onclick="showPage('tracking',this)">
+            📍 Live Tracking
+        </button>
+
+    </nav>
+
+    <div class="menu-title">
+        Management
+    </div>
+
+    <nav class="menu">
+
+        <button
+                onclick="showPage('locations',this)">
+            📌 Locations
+        </button>
+
+        <button
+                onclick="showPage('reports',this)">
+            📈 Reports
+        </button>
+
+        <button
+                onclick="showPage('settings',this)">
+            ⚙️ Settings
+        </button>
+
+    </nav>
+
+</aside>
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <h1 id="pageTitle">
+                Smart Waste Dashboard
+            </h1>
+
+            <p id="pageSubtitle">
+                Monitor waste bins and collection vehicles
+            </p>
+
+        </div>
+
+        <div class="admin">
+
+            <button
+                    onclick="logoutUser()"
+                    class="btn danger">
+                🚪 Logout
+            </button>
+
+            <div class="admin-info" id="adminInfoToggle" onclick="toggleProfileDropdown(event)">
+
+                <div>
+
+                    <strong id="adminName">
+                        Admin
+                    </strong>
+
+                    <br>
+
+                    <small id="adminEmailDisplay">
+                        System Manager
+                    </small>
+
+                </div>
+
+                <div class="avatar">
+                    👤
+                </div>
+
+            </div>
+
+            <!-- =========================
+                 PROFILE / ACCOUNT SETTINGS
+            ========================= -->
+
+            <div id="profileDropdown" class="profile-dropdown">
+
+                <h3>
+                    👤 Account Settings
+                </h3>
+
+                <div class="profile-field">
+
+                    <label>
+                        Full Name
+                    </label>
+
+                    <input
+                            id="profileName"
+                            type="text"
+                            placeholder="Full Name">
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                            id="profileEmail"
+                            type="email"
+                            placeholder="Email">
+
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-field">
+
+                    <label>
+                        Current Password
+                    </label>
+
+                    <input
+                            id="profileCurrentPassword"
+                            type="password"
+                            placeholder="Required to save changes">
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label>
+                        New Password (optional)
+                    </label>
+
+                    <input
+                            id="profileNewPassword"
+                            type="password"
+                            placeholder="Leave blank to keep current password">
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label>
+                        Confirm New Password
+                    </label>
+
+                    <input
+                            id="profileConfirmPassword"
+                            type="password"
+                            placeholder="Confirm new password">
+
+                </div>
+
+                <div class="profile-actions">
+
+                    <button
+                            class="btn secondary"
+                            onclick="closeProfileDropdown()">
+                        Cancel
+                    </button>
+
+                    <button
+                            class="btn"
+                            onclick="saveProfile()">
+                        💾 Save Changes
+                    </button>
+
+                </div>
+
+                <div id="profileMessage"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="message"></div>
+
+    <!-- =========================
+         DASHBOARD
+    ========================= -->
+
+    <section
+            id="dashboard"
+            class="page active">
+
+        <div class="stats">
+
+            <div class="card">
+
+                <div class="stat-icon">
+                    🗑️
+                </div>
+
+                <div class="stat-title">
+                    Total Waste Bins
+                </div>
+
+                <div
+                        class="stat-number"
+                        id="totalBins">
+                    0
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="stat-icon">
+                    🟢
+                </div>
+
+                <div class="stat-title">
+                    Normal Bins
+                </div>
+
+                <div
+                        class="stat-number"
+                        id="normalBins">
+                    0
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="stat-icon">
+                    🚛
+                </div>
+
+                <div class="stat-title">
+                    Collecting Vehicles
+                </div>
+
+                <div
+                        class="stat-number"
+                        id="collectingVehicles">
+                    0
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="stat-icon">
+                    🔴
+                </div>
+
+                <div class="stat-title">
+                    Critical Bins
+                </div>
+
+                <div
+                        class="stat-number"
+                        id="criticalBins">
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        🚛 Live Waste Collection Tracking
+                    </h2>
+
+                    <p>
+                        Collecting vehicles are displayed on the map.
+                    </p>
+
+                </div>
+
+                <div class="live-status">
+
+                    <span class="live-dot"></span>
+
+                    LIVE
+
+                </div>
+
+            </div>
+
+            <div id="map"></div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         BINS
+    ========================= -->
+
+    <section
+            id="bins"
+            class="page">
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        🗑️ Waste Bins
+                    </h2>
+
+                    <p>
+                        Manage all registered waste bins.
+                    </p>
+
+                </div>
+
+                <button
+                        class="btn"
+                        onclick="loadBins()">
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+            <div
+                    class="bin-grid"
+                    id="binsContainer">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>
+                ➕ Add Waste Bin
+            </h2>
+
+            <br>
+
+            <form id="binForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Location
+                        </label>
+
+                        <input
+                                id="binLocation"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Latitude
+                        </label>
+
+                        <input
+                                id="binLatitude"
+                                type="number"
+                                step="any"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Longitude
+                        </label>
+
+                        <input
+                                id="binLongitude"
+                                type="number"
+                                step="any"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Capacity
+                        </label>
+
+                        <input
+                                id="binCapacity"
+                                type="number"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Fill Level %
+                        </label>
+
+                        <input
+                                id="binFillLevel"
+                                type="number"
+                                min="0"
+                                max="100"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="binStatus">
+
+                            <option value="NORMAL">
+                                NORMAL
+                            </option>
+
+                            <option value="WARNING">
+                                WARNING
+                            </option>
+
+                            <option value="CRITICAL">
+                                CRITICAL
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <br>
+
+                <button class="btn">
+                    ➕ Add Waste Bin
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         VEHICLES
+    ========================= -->
+
+    <section
+            id="vehicles"
+            class="page">
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        🚛 Waste Collection Vehicles
+                    </h2>
+
+                    <p>
+                        Click <b>Track Vehicle</b> to open live tracking.
+                    </p>
+
+                </div>
+
+                <button
+                        class="btn"
+                        onclick="loadVehicles()">
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+            <input
+                    class="search"
+                    id="vehicleSearch"
+                    placeholder="🔎 Search vehicle..."
+                    oninput="displayVehicles()">
+
+            <div
+                    class="vehicle-grid"
+                    id="vehiclesContainer">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+        <!-- GPS -->
+
+        <div class="panel">
+
+            <div class="gps-panel">
+
+                <h3>
+                    📱 Driver GPS Tracking
+                </h3>
+
+                <p>
+                    Select a waste collection vehicle and start GPS tracking.
+                    The driver's phone location will be sent to the Spring Boot server.
+                </p>
+
+                <div class="gps-controls">
+
+                    <div>
+
+                        <label>
+                            Select Vehicle
+                        </label>
+
+                        <select id="gpsVehicleSelect">
+
+                            <option value="">
+                                Select collecting vehicle
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button
+                            class="btn gps"
+                            onclick="startVehicleGPS()">
+                        📍 Start GPS
+                    </button>
+
+                    <button
+                            class="btn danger"
+                            onclick="stopVehicleGPS()">
+                        ⛔ Stop GPS
+                    </button>
+
+                </div>
+
+                <div id="gpsStatus">
+                    GPS not started.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         LIVE TRACKING
+    ========================= -->
+
+    <section
+            id="tracking"
+            class="page">
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        📍 Live Vehicle Tracking
+                    </h2>
+
+                    <p>
+                        Selected vehicle location updates automatically.
+                    </p>
+
+                </div>
+
+                <div class="live-status">
+
+                    <span class="live-dot"></span>
+
+                    GPS LIVE
+
+                </div>
+
+            </div>
+
+            <div
+                    id="selectedVehicleInfo"
+                    class="tracking-selected">
+                🚛 No vehicle selected. Go to Vehicles and click Track Vehicle.
+            </div>
+
+            <div
+                    class="tracking-info"
+                    id="trackingDetails"
+                    style="display:none;">
+
+                <div class="tracking-info-card">
+
+                    <small>
+                        VEHICLE
+                    </small>
+
+                    <strong id="trackVehicleNumber">
+                        -
+                    </strong>
+
+                </div>
+
+                <div class="tracking-info-card">
+
+                    <small>
+                        DRIVER
+                    </small>
+
+                    <strong id="trackDriver">
+                        -
+                    </strong>
+
+                </div>
+
+                <div class="tracking-info-card">
+
+                    <small>
+                        LATITUDE
+                    </small>
+
+                    <strong id="trackLatitude">
+                        -
+                    </strong>
+
+                </div>
+
+                <div class="tracking-info-card">
+
+                    <small>
+                        LONGITUDE
+                    </small>
+
+                    <strong id="trackLongitude">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+            <div id="trackingMap"></div>
+
+            <br>
+
+            <button
+                    id="stopTrackingButton"
+                    class="btn stop-track"
+                    onclick="stopLiveTracking()"
+                    style="display:none;">
+                ⛔ Stop Vehicle Tracking
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         LOCATIONS
+    ========================= -->
+
+    <section
+            id="locations"
+            class="page">
+
+        <div class="panel">
+
+            <h2>
+                📌 Waste Bin Locations
+            </h2>
+
+            <br>
+
+            <div id="locationsContainer">
+                Loading...
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         REPORTS
+    ========================= -->
+
+    <section
+            id="reports"
+            class="page">
+
+        <div class="panel">
+
+            <h2>
+                📈 Reports
+            </h2>
+
+            <br>
+
+            <div class="stats">
+
+                <div class="card">
+
+                    <div class="stat-title">
+                        Total Bins
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            id="reportBins">
+                        0
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="stat-title">
+                        Normal Bins
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            id="reportNormal">
+                        0
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="stat-title">
+                        Critical Bins
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            id="reportCritical">
+                        0
+                    </div>
+
+                </div>
+
+                <div class="card">
+
+                    <div class="stat-title">
+                        Collecting Vehicles
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            id="reportVehicles">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================
+         SETTINGS
+    ========================= -->
+
+    <section
+            id="settings"
+            class="page">
+
+        <div class="panel">
+
+            <h2>
+                ⚙️ Settings
+            </h2>
+
+            <br>
+
+            <div class="settings-grid">
+
+                <div class="setting-card">
+
+                    <h3>
+                        📍 Tracking Settings
+                    </h3>
+
+                    <p>
+                        Control live vehicle tracking.
+                    </p>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Enable live tracking
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                    type="checkbox"
+                                    id="trackingEnabled"
+                                    checked
+                                    onchange="saveSettings()">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Show only collecting vehicles
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                    type="checkbox"
+                                    id="collectingOnly"
+                                    checked
+                                    onchange="saveSettings()">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Automatic location refresh
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                    type="checkbox"
+                                    id="autoRefresh"
+                                    checked
+                                    onchange="saveSettings()">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <h3>
+                        🗺️ Map Settings
+                    </h3>
+
+                    <p>
+                        Change Google Maps display.
+                    </p>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Map Type
+                        </span>
+
+                        <select
+                                id="mapType"
+                                onchange="saveSettings()">
+
+                            <option value="roadmap">
+                                Road Map
+                            </option>
+
+                            <option value="satellite">
+                                Satellite
+                            </option>
+
+                            <option value="hybrid">
+                                Hybrid
+                            </option>
+
+                            <option value="terrain">
+                                Terrain
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Map Zoom
+                        </span>
+
+                        <select
+                                id="mapZoom"
+                                onchange="saveSettings()">
+
+                            <option value="10">
+                                10
+                            </option>
+
+                            <option value="11">
+                                11
+                            </option>
+
+                            <option value="12" selected>
+                                12
+                            </option>
+
+                            <option value="13">
+                                13
+                            </option>
+
+                            <option value="14">
+                                14
+                            </option>
+
+                            <option value="15">
+                                15
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <h3>
+                        🔄 Refresh Settings
+                    </h3>
+
+                    <p>
+                        Choose GPS update frequency.
+                    </p>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Tracking interval
+                        </span>
+
+                        <select
+                                id="refreshInterval"
+                                onchange="saveSettings()">
+
+                            <option value="5" selected>
+                                5 seconds
+                            </option>
+
+                            <option value="10">
+                                10 seconds
+                            </option>
+
+                            <option value="15">
+                                15 seconds
+                            </option>
+
+                            <option value="30">
+                                30 seconds
+                            </option>
+
+                            <option value="60">
+                                1 minute
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <h3>
+                        ♿ Accessibility
+                    </h3>
+
+                    <p>
+                        Change the interface.
+                    </p>
+
+                    <div class="accessibility-box">
+
+                        <button onclick="increaseFont()">
+                            A+ Larger Text
+                        </button>
+
+                        <button onclick="decreaseFont()">
+                            A- Smaller Text
+                        </button>
+
+                        <button onclick="toggleDarkMode()">
+                            🌙 Dark Mode
+                        </button>
+
+                        <button onclick="toggleContrast()">
+                            ◐ High Contrast
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <h3>
+                        🔔 Notifications
+                    </h3>
+
+                    <p>
+                        Configure waste management alerts.
+                    </p>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Enable notifications
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                    type="checkbox"
+                                    id="notifications"
+                                    checked
+                                    onchange="saveSettings()">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                    <div class="setting-row">
+
+                        <span>
+                            Critical bin alerts
+                        </span>
+
+                        <label class="switch">
+
+                            <input
+                                    type="checkbox"
+                                    id="criticalAlerts"
+                                    checked
+                                    onchange="saveSettings()">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <h3>
+                        🖥️ System
+                    </h3>
+
+                    <p>
+                        General application options.
+                    </p>
+
+                    <button
+                            class="btn"
+                            onclick="resetSettings()">
+                        Reset Settings
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+    /* =====================================
+       API
+    ===================================== */
+
+    const BIN_API = "/bins";
+    const VEHICLE_API = "/vehicles";
+
+
+    /* =====================================
+       DATA
+    ===================================== */
+
+    let bins = [];
+    let vehicles = [];
+
+    let map = null;
+    let trackingMap = null;
+
+    let vehicleMarkers = [];
+    let trackingMarkers = [];
+    let binMarkers = [];
+
+    let refreshTimer = null;
+
+    let gpsWatchId = null;
+    let gpsVehicleId = null;
+
+    /*
+        NEW:
+        This stores the vehicle selected
+        from the Vehicles page.
+    */
+    let selectedTrackingVehicleId = null;
+
+
+    /* =====================================
+       SETTINGS
+    ===================================== */
+
+    let settings = {
+
+        trackingEnabled: true,
+        collectingOnly: true,
+        autoRefresh: true,
+        refreshInterval: 5,
+        mapType: "roadmap",
+        mapZoom: 12,
+        notifications: true,
+        criticalAlerts: true
+
+    };
+
+
+    /* =====================================
+       AUTH
+    ===================================== */
+
+    function showSignup() {
+
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("signupBox").style.display = "block";
+
+        clearAuthMessage();
+
+    }
+
+
+    function showLogin() {
+
+        document.getElementById("signupBox").style.display = "none";
+        document.getElementById("loginBox").style.display = "block";
+
+        clearAuthMessage();
+
+    }
+
+
+    function showAuthMessage(message, success = false) {
+
+        const box = document.getElementById("authMessage");
+
+        box.textContent = message;
+        box.style.display = "block";
+
+        if (success) {
+
+            box.style.background = "#d9f2df";
+            box.style.color = "#17642b";
+
+        } else {
+
+            box.style.background = "#ffe0e0";
+            box.style.color = "#b00020";
+
+        }
+
+    }
+
+
+    function clearAuthMessage() {
+
+        document.getElementById("authMessage").style.display = "none";
+
+    }
+
+
+    /* =====================================
+       SIGNUP
+    ===================================== */
+
+    function signupUser() {
+
+        const name =
+            document.getElementById("signupName").value.trim();
+
+        const email =
+            document.getElementById("signupEmail").value.trim();
+
+        const password =
+            document.getElementById("signupPassword").value;
+
+        const confirmPassword =
+            document.getElementById("signupConfirmPassword").value;
+
+
+        if (!name || !email || !password || !confirmPassword) {
+
+            showAuthMessage("Please fill all fields.");
+
+            return;
+
+        }
+
+
+        if (password.length < 6) {
+
+            showAuthMessage(
+                "Password must contain at least 6 characters."
+            );
+
+            return;
+
+        }
+
+
+        if (password !== confirmPassword) {
+
+            showAuthMessage("Passwords do not match.");
+
+            return;
+
+        }
+
+
+        const storedUser =
+            localStorage.getItem("smartWasteUser");
+
+
+        if (storedUser) {
+
+            const existingUser =
+                JSON.parse(storedUser);
+
+            if (
+                existingUser.email.toLowerCase() ===
+                email.toLowerCase()
+            ) {
+
+                showAuthMessage(
+                    "An account with this email already exists."
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        const user = {
+
+            name: name,
+            email: email,
+            password: password
+
+        };
+
+
+        localStorage.setItem(
+            "smartWasteUser",
+            JSON.stringify(user)
+        );
+
+
+        showAuthMessage(
+            "Account created successfully! Please login.",
+            true
+        );
+
+
+        document.getElementById("signupName").value = "";
+        document.getElementById("signupEmail").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("signupConfirmPassword").value = "";
+
+
+        setTimeout(showLogin, 1200);
+
+    }
+
+
+    /* =====================================
+       LOGIN
+    ===================================== */
+
+    function loginUser() {
+
+        const email =
+            document.getElementById("loginEmail").value.trim();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+
+        if (!email || !password) {
+
+            showAuthMessage(
+                "Please enter email and password."
+            );
+
+            return;
+
+        }
+
+
+        const storedUser =
+            localStorage.getItem("smartWasteUser");
+
+
+        if (!storedUser) {
+
+            showAuthMessage(
+                "No account found. Please Sign Up first."
+            );
+
+            return;
+
+        }
+
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        if (
+            email.toLowerCase() === user.email.toLowerCase() &&
+            password === user.password
+        ) {
+
+            localStorage.setItem(
+                "smartWasteLoggedIn",
+                "true"
+            );
+
+            localStorage.setItem(
+                "smartWasteUserName",
+                user.name
+            );
+
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "none";
+
+
+            applyUserToTopbar(user);
+
+
+            showMessage(
+                "Login successful. Welcome " +
+                user.name +
+                "!"
+            );
+
+        } else {
+
+            showAuthMessage(
+                "Invalid email or password."
+            );
+
+        }
+
+    }
+
+
+    /* =====================================
+       LOGOUT
+    ===================================== */
+
+    function logoutUser() {
+
+        stopVehicleGPS();
+        stopLiveTracking();
+
+        closeProfileDropdown();
+
+        localStorage.removeItem(
+            "smartWasteLoggedIn"
+        );
+
+        document.getElementById(
+            "authScreen"
+        ).style.display = "flex";
+
+        showLogin();
+
+    }
+
+
+    /* =====================================
+       CHECK LOGIN
+    ===================================== */
+
+    function checkLogin() {
+
+        const loggedIn =
+            localStorage.getItem(
+                "smartWasteLoggedIn"
+            );
+
+
+        if (loggedIn === "true") {
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "none";
+
+
+            const storedUser =
+                localStorage.getItem("smartWasteUser");
+
+
+            if (storedUser) {
+
+                applyUserToTopbar(
+                    JSON.parse(storedUser)
+                );
+
+            }
+
+        } else {
+
+            document.getElementById(
+                "authScreen"
+            ).style.display = "flex";
+
+        }
+
+    }
+
+
+    /* =====================================
+       ⭐ NEW - ACCOUNT / PROFILE SETTINGS
+    ===================================== */
+
+    function applyUserToTopbar(user) {
+
+        if (!user) return;
+
+        document.getElementById(
+            "adminName"
+        ).textContent = user.name;
+
+        document.getElementById(
+            "adminEmailDisplay"
+        ).textContent = user.email;
+
+    }
+
+
+    function toggleProfileDropdown(event) {
+
+        if (event) {
+            event.stopPropagation();
+        }
+
+        const dropdown =
+            document.getElementById("profileDropdown");
+
+
+        const isOpen =
+            dropdown.classList.contains("open");
+
+
+        if (isOpen) {
+
+            closeProfileDropdown();
+
+            return;
+
+        }
+
+
+        const storedUser =
+            localStorage.getItem("smartWasteUser");
+
+
+        if (storedUser) {
+
+            const user =
+                JSON.parse(storedUser);
+
+            document.getElementById("profileName").value =
+                user.name || "";
+
+            document.getElementById("profileEmail").value =
+                user.email || "";
+
+        }
+
+
+        document.getElementById("profileCurrentPassword").value = "";
+        document.getElementById("profileNewPassword").value = "";
+        document.getElementById("profileConfirmPassword").value = "";
+
+        hideProfileMessage();
+
+
+        dropdown.classList.add("open");
+
+
+        /*
+            Close the dropdown when clicking
+            anywhere else on the page.
+        */
+        document.addEventListener(
+            "click",
+            handleOutsideProfileClick
+        );
+
+    }
+
+
+    function closeProfileDropdown() {
+
+        document.getElementById(
+            "profileDropdown"
+        ).classList.remove("open");
+
+        document.removeEventListener(
+            "click",
+            handleOutsideProfileClick
+        );
+
+    }
+
+
+    function handleOutsideProfileClick(event) {
+
+        const dropdown =
+            document.getElementById("profileDropdown");
+
+        const toggle =
+            document.getElementById("adminInfoToggle");
+
+
+        if (
+            !dropdown.contains(event.target) &&
+            !toggle.contains(event.target)
+        ) {
+
+            closeProfileDropdown();
+
+        }
+
+    }
+
+
+    function showProfileMessage(message, success = false) {
+
+        const box =
+            document.getElementById("profileMessage");
+
+        box.textContent = message;
+        box.style.display = "block";
+
+        if (success) {
+
+            box.style.background = "#d9f2df";
+            box.style.color = "#17642b";
+
+        } else {
+
+            box.style.background = "#ffe0e0";
+            box.style.color = "#b00020";
+
+        }
+
+    }
+
+
+    function hideProfileMessage() {
+
+        document.getElementById(
+            "profileMessage"
+        ).style.display = "none";
+
+    }
+
+
+    function saveProfile() {
+
+        const newName =
+            document.getElementById("profileName").value.trim();
+
+        const newEmail =
+            document.getElementById("profileEmail").value.trim();
+
+        const currentPassword =
+            document.getElementById("profileCurrentPassword").value;
+
+        const newPassword =
+            document.getElementById("profileNewPassword").value;
+
+        const confirmPassword =
+            document.getElementById("profileConfirmPassword").value;
+
+
+        if (!newName || !newEmail) {
+
+            showProfileMessage(
+                "Name and email cannot be empty."
+            );
+
+            return;
+
+        }
+
+
+        const storedUser =
+            localStorage.getItem("smartWasteUser");
+
+
+        if (!storedUser) {
+
+            showProfileMessage(
+                "No account found."
+            );
+
+            return;
+
+        }
+
+
+        const user =
+            JSON.parse(storedUser);
+
+
+        if (!currentPassword) {
+
+            showProfileMessage(
+                "Enter your current password to save changes."
+            );
+
+            return;
+
+        }
+
+
+        if (currentPassword !== user.password) {
+
+            showProfileMessage(
+                "Current password is incorrect."
+            );
+
+            return;
+
+        }
+
+
+        if (newPassword || confirmPassword) {
+
+            if (newPassword.length < 6) {
+
+                showProfileMessage(
+                    "New password must contain at least 6 characters."
+                );
+
+                return;
+
+            }
+
+
+            if (newPassword !== confirmPassword) {
+
+                showProfileMessage(
+                    "New passwords do not match."
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+            Apply updates.
+        */
+
+        user.name = newName;
+        user.email = newEmail;
+
+        if (newPassword) {
+
+            user.password = newPassword;
+
+        }
+
+
+        localStorage.setItem(
+            "smartWasteUser",
+            JSON.stringify(user)
+        );
+
+        localStorage.setItem(
+            "smartWasteUserName",
+            user.name
+        );
+
+
+        applyUserToTopbar(user);
+
+
+        showProfileMessage(
+            "Account details updated successfully.",
+            true
+        );
+
+
+        document.getElementById("profileCurrentPassword").value = "";
+        document.getElementById("profileNewPassword").value = "";
+        document.getElementById("profileConfirmPassword").value = "";
+
+
+        setTimeout(() => {
+
+            closeProfileDropdown();
+
+            showMessage("Profile updated successfully.");
+
+        }, 900);
+
+    }
+
+
+    /* =====================================
+       SETTINGS
+    ===================================== */
+
+    function loadSettings() {
+
+        const saved =
+            localStorage.getItem(
+                "smartWasteSettings"
+            );
+
+
+        if (saved) {
+
+            settings = {
+                ...settings,
+                ...JSON.parse(saved)
+            };
+
+        }
+
+
+        document.getElementById("trackingEnabled").checked =
+            settings.trackingEnabled;
+
+        document.getElementById("collectingOnly").checked =
+            settings.collectingOnly;
+
+        document.getElementById("autoRefresh").checked =
+            settings.autoRefresh;
+
+        document.getElementById("refreshInterval").value =
+            settings.refreshInterval;
+
+        document.getElementById("mapType").value =
+            settings.mapType;
+
+        document.getElementById("mapZoom").value =
+            settings.mapZoom;
+
+        document.getElementById("notifications").checked =
+            settings.notifications;
+
+        document.getElementById("criticalAlerts").checked =
+            settings.criticalAlerts;
+
+    }
+
+
+    function saveSettings() {
+
+        settings.trackingEnabled =
+            document.getElementById("trackingEnabled").checked;
+
+        settings.collectingOnly =
+            document.getElementById("collectingOnly").checked;
+
+        settings.autoRefresh =
+            document.getElementById("autoRefresh").checked;
+
+        settings.refreshInterval =
+            Number(
+                document.getElementById("refreshInterval").value
+            );
+
+        settings.mapType =
+            document.getElementById("mapType").value;
+
+        settings.mapZoom =
+            Number(
+                document.getElementById("mapZoom").value
+            );
+
+        settings.notifications =
+            document.getElementById("notifications").checked;
+
+        settings.criticalAlerts =
+            document.getElementById("criticalAlerts").checked;
+
+
+        localStorage.setItem(
+            "smartWasteSettings",
+            JSON.stringify(settings)
+        );
+
+
+        applyMapSettings();
+
+        startAutoRefresh();
+
+        updateVehicleMarkers();
+
+        updateTrackingMarkers();
+
+        showMessage(
+            "Settings saved successfully."
+        );
+
+    }
+
+
+    function resetSettings() {
+
+        localStorage.removeItem(
+            "smartWasteSettings"
+        );
+
+        location.reload();
+
+    }
+
+
+    /* =====================================
+       NAVIGATION
+    ===================================== */
+
+    function showPage(page, button) {
+
+        document
+            .querySelectorAll(".page")
+            .forEach(p =>
+                p.classList.remove("active")
+            );
+
+
+        document
+            .getElementById(page)
+            .classList.add("active");
+
+
+        document
+            .querySelectorAll(".menu button")
+            .forEach(b =>
+                b.classList.remove("active")
+            );
+
+
+        if (button) {
+            button.classList.add("active");
+        }
+
+
+        const titles = {
+
+            dashboard: [
+                "Smart Waste Dashboard",
+                "Monitor waste bins and collection vehicles"
+            ],
+
+            bins: [
+                "Waste Bins",
+                "Manage waste bins"
+            ],
+
+            vehicles: [
+                "Collection Vehicles",
+                "Manage waste collection vehicles"
+            ],
+
+            tracking: [
+                "Live Vehicle Tracking",
+                "Track waste collection vehicles in real time"
+            ],
+
+            locations: [
+                "Locations",
+                "Waste bin locations"
+            ],
+
+            reports: [
+                "Reports",
+                "Waste management statistics"
+            ],
+
+            settings: [
+                "Settings",
+                "Application and accessibility settings"
+            ]
+
+        };
+
+
+        document.getElementById("pageTitle").textContent =
+            titles[page][0];
+
+        document.getElementById("pageSubtitle").textContent =
+            titles[page][1];
+
+
+        if (page === "tracking") {
+
+            setTimeout(() => {
+
+                initTrackingMap();
+
+            }, 300);
+
+        }
+
+
+        if (page === "vehicles") {
+
+            loadVehicles();
+
+        }
+
+
+        if (page === "locations") {
+
+            loadLocations();
+
+        }
+
+
+        if (page === "dashboard") {
+
+            setTimeout(() => {
+
+                if (map && window.google) {
+
+                    google.maps.event.trigger(
+                        map,
+                        "resize"
+                    );
+
+                }
+
+            }, 200);
+
+        }
+
+    }
+
+
+    /* =====================================
+       LOAD BINS
+    ===================================== */
+
+    async function loadBins() {
+
+        try {
+
+            const response =
+                await fetch(BIN_API);
+
+
+            if (!response.ok) {
+
+                throw new Error("Bin API error");
+
+            }
+
+
+            bins =
+                await response.json();
+
+
+            displayBins();
+
+            updateStatistics();
+
+            updateBinMarkers();
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+            document.getElementById(
+                "binsContainer"
+            ).innerHTML =
+                "<p>Unable to load bins.</p>";
+
+        }
+
+    }
+
+
+    /* =====================================
+       DISPLAY BINS
+    ===================================== */
+
+    function displayBins() {
+
+        const container =
+            document.getElementById(
+                "binsContainer"
+            );
+
+
+        container.innerHTML = "";
+
+
+        if (!bins.length) {
+
+            container.innerHTML =
+                "<p>No bins found.</p>";
+
+            return;
+
+        }
+
+
+        bins.forEach(bin => {
+
+            const fill =
+                Number(bin.fillLevel || 0);
+
+
+            let progressClass = "";
+
+
+            if (fill >= 80) {
+
+                progressClass =
+                    "progress-danger";
+
+            } else if (fill >= 50) {
+
+                progressClass =
+                    "progress-warning";
+
+            }
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "bin-card";
+
+
+            card.innerHTML = `
+
+            <div class="bin-icon">
+                🗑️
+            </div>
+
+            <div class="vehicle-number">
+                BIN #${bin.binId ?? "-"}
+            </div>
+
+            <div class="bin-location">
+                📍 ${bin.location ?? "-"}
+            </div>
+
+            <div class="bin-info">
+                Latitude: ${bin.latitude ?? "-"}
+                <br>
+                Longitude: ${bin.longitude ?? "-"}
+            </div>
+
+            <div class="bin-info">
+                Fill Level: ${fill}%
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar ${progressClass}"
+                    style="width:${Math.min(fill,100)}%">
+                </div>
+
+            </div>
+
+            <div class="bin-info">
+                Capacity: ${bin.capacity ?? "-"}
+            </div>
+
+            <div class="bin-info">
+                Status: ${bin.status ?? "-"}
+            </div>
+
+        `;
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    /* =====================================
+       ADD BIN
+    ===================================== */
+
+    document
+        .getElementById("binForm")
+        .addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const bin = {
+
+                    location:
+                    document.getElementById(
+                        "binLocation"
+                    ).value,
+
+                    latitude:
+                        Number(
+                            document.getElementById(
+                                "binLatitude"
+                            ).value
+                        ),
+
+                    longitude:
+                        Number(
+                            document.getElementById(
+                                "binLongitude"
+                            ).value
+                        ),
+
+                    capacity:
+                        Number(
+                            document.getElementById(
+                                "binCapacity"
+                            ).value
+                        ),
+
+                    fillLevel:
+                        Number(
+                            document.getElementById(
+                                "binFillLevel"
+                            ).value
+                        ),
+
+                    status:
+                    document.getElementById(
+                        "binStatus"
+                    ).value
+
+                };
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            BIN_API,
+                            {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(bin)
+
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Failed to add bin"
+                        );
+
+                    }
+
+
+                    this.reset();
+
+                    showMessage(
+                        "Waste bin added successfully."
+                    );
+
+                    loadBins();
+
+                }
+
+                catch(error) {
+
+                    console.error(error);
+
+                    showMessage(
+                        "Unable to add waste bin."
+                    );
+
+                }
+
+            }
+        );
+
+
+    /* =====================================
+       LOAD VEHICLES
+    ===================================== */
+
+    async function loadVehicles() {
+
+        try {
+
+            const response =
+                await fetch(VEHICLE_API);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Vehicle API error"
+                );
+
+            }
+
+
+            vehicles =
+                await response.json();
+
+
+            displayVehicles();
+
+            updateStatistics();
+
+            populateGPSVehicleSelect();
+
+            updateVehicleMarkers();
+
+            updateTrackingMarkers();
+
+            /*
+                NEW:
+                Update selected vehicle information
+                whenever fresh GPS data arrives.
+            */
+            updateSelectedVehicleInfo();
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+
+            document.getElementById(
+                "vehiclesContainer"
+            ).innerHTML = `
+
+            <p>
+                Unable to connect to
+                <b>/vehicles</b>.
+            </p>
+
+        `;
+
+        }
+
+    }
+
+
+    /* =====================================
+       DISPLAY VEHICLES
+    ===================================== */
+
+    function displayVehicles() {
+
+        const container =
+            document.getElementById(
+                "vehiclesContainer"
+            );
+
+
+        const search =
+            (
+                document.getElementById(
+                    "vehicleSearch"
+                )?.value || ""
+            ).toLowerCase();
+
+
+        container.innerHTML = "";
+
+
+        const wasteVehicles =
+            vehicles
+                .filter(vehicle =>
+                    vehicle.vehicleType ===
+                    "WASTE_COLLECTION"
+                )
+                .filter(vehicle =>
+                    String(
+                        vehicle.vehicleNumber
+                    )
+                        .toLowerCase()
+                        .includes(search)
+                );
+
+
+        if (!wasteVehicles.length) {
+
+            container.innerHTML =
+                "<p>No waste collection vehicles found.</p>";
+
+            return;
+
+        }
+
+
+        wasteVehicles.forEach(vehicle => {
+
+            let statusClass =
+                "offline";
+
+
+            if (
+                vehicle.status ===
+                "COLLECTING"
+            ) {
+
+                statusClass =
+                    "collecting";
+
+            } else if (
+                vehicle.status ===
+                "AVAILABLE"
+            ) {
+
+                statusClass =
+                    "available";
+
+            }
+
+
+            const isSelected =
+                selectedTrackingVehicleId ===
+                vehicle.vehicleId;
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "vehicle-card" +
+                (isSelected ? " selected" : "");
+
+
+            card.innerHTML = `
+
+            <div class="vehicle-header">
+
+                <div class="truck">
+                    🚛
+                </div>
+
+                <div class="vehicle-number">
+                    ${vehicle.vehicleNumber ?? "-"}
+                </div>
+
+            </div>
+
+            <div class="vehicle-name">
+                Waste Collection Vehicle
+            </div>
+
+            <div class="vehicle-detail">
+                👤 Driver:
+                ${vehicle.driver ?? "Not assigned"}
+            </div>
+
+            <div class="vehicle-detail">
+                📍 Latitude:
+                ${vehicle.latitude ?? "-"}
+            </div>
+
+            <div class="vehicle-detail">
+                📍 Longitude:
+                ${vehicle.longitude ?? "-"}
+            </div>
+
+            <div class="vehicle-detail">
+                🕐 Updated:
+                ${vehicle.lastUpdated ?? "-"}
+            </div>
+
+            <span class="status ${statusClass}">
+                ${vehicle.status ?? "UNKNOWN"}
+            </span>
+
+            <button
+                class="btn track"
+                onclick="trackVehicle(${vehicle.vehicleId})">
+
+                📍 Track Vehicle
+
+            </button>
+
+        `;
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    /* =====================================
+       ⭐ TRACK VEHICLE
+    ===================================== */
+
+    function trackVehicle(vehicleId) {
+
+        /*
+            Save selected vehicle.
+        */
+        selectedTrackingVehicleId =
+            Number(vehicleId);
+
+
+        /*
+            Find vehicle.
+        */
+        const vehicle =
+            vehicles.find(
+                v =>
+                    Number(v.vehicleId) ===
+                    selectedTrackingVehicleId
+            );
+
+
+        if (!vehicle) {
+
+            showMessage(
+                "Vehicle not found."
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Only allow waste collection vehicles.
+        */
+        if (
+            vehicle.vehicleType !==
+            "WASTE_COLLECTION"
+        ) {
+
+            showMessage(
+                "This is not a waste collection vehicle."
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Go directly to Live Tracking.
+        */
+        showPage(
+            "tracking",
+            document.getElementById("trackingBtn")
+        );
+
+
+        /*
+            Initialize map and display vehicle.
+        */
+        setTimeout(() => {
+
+            initTrackingMap();
+
+            focusSelectedVehicle();
+
+        }, 400);
+
+
+        showMessage(
+            "Tracking " +
+            vehicle.vehicleNumber +
+            " live."
+        );
+
+    }
+
+
+    /* =====================================
+       ⭐ UPDATE SELECTED VEHICLE
+    ===================================== */
+
+    function updateSelectedVehicleInfo() {
+
+        if (
+            selectedTrackingVehicleId === null
+        ) {
+
+            return;
+
+        }
+
+
+        const vehicle =
+            vehicles.find(
+                v =>
+                    Number(v.vehicleId) ===
+                    Number(selectedTrackingVehicleId)
+            );
+
+
+        if (!vehicle) {
+
+            return;
+
+        }
+
+
+        const info =
+            document.getElementById(
+                "selectedVehicleInfo"
+            );
+
+
+        info.innerHTML = `
+
+        🟢 LIVE TRACKING:
+        <strong>
+            ${vehicle.vehicleNumber}
+        </strong>
+
+        &nbsp; | &nbsp;
+
+        Status:
+        <strong>
+            ${vehicle.status ?? "-"}
+        </strong>
+
+        &nbsp; | &nbsp;
+
+        Last Update:
+        <strong>
+            ${vehicle.lastUpdated ?? "-"}
+        </strong>
+
+    `;
+
+
+        document.getElementById(
+            "trackingDetails"
+        ).style.display = "grid";
+
+
+        document.getElementById(
+            "trackVehicleNumber"
+        ).textContent =
+            vehicle.vehicleNumber ?? "-";
+
+
+        document.getElementById(
+            "trackDriver"
+        ).textContent =
+            vehicle.driver ?? "Not assigned";
+
+
+        document.getElementById(
+            "trackLatitude"
+        ).textContent =
+            vehicle.latitude ?? "-";
+
+
+        document.getElementById(
+            "trackLongitude"
+        ).textContent =
+            vehicle.longitude ?? "-";
+
+
+        document.getElementById(
+            "stopTrackingButton"
+        ).style.display =
+            "block";
+
+    }
+
+
+    /* =====================================
+       ⭐ FOCUS SELECTED VEHICLE
+    ===================================== */
+
+    function focusSelectedVehicle() {
+
+        if (
+            !trackingMap ||
+            !window.google ||
+            selectedTrackingVehicleId === null
+        ) {
+
+            return;
+
+        }
+
+
+        const vehicle =
+            vehicles.find(
+                v =>
+                    Number(v.vehicleId) ===
+                    Number(selectedTrackingVehicleId)
+            );
+
+
+        if (!vehicle) {
+
+            return;
+
+        }
+
+
+        if (
+            vehicle.latitude == null ||
+            vehicle.longitude == null
+        ) {
+
+            showMessage(
+                "This vehicle does not have a GPS location yet."
+            );
+
+            return;
+
+        }
+
+
+        const position = {
+
+            lat:
+                Number(vehicle.latitude),
+
+            lng:
+                Number(vehicle.longitude)
+
+        };
+
+
+        /*
+            Center map on vehicle.
+        */
+        trackingMap.panTo(position);
+
+
+        /*
+            Zoom closer.
+        */
+        trackingMap.setZoom(16);
+
+
+        /*
+            Update marker.
+        */
+        updateTrackingMarkers();
+
+    }
+
+
+    /* =====================================
+       GPS VEHICLE SELECT
+    ===================================== */
+
+    function populateGPSVehicleSelect() {
+
+        const select =
+            document.getElementById(
+                "gpsVehicleSelect"
+            );
+
+
+        if (!select) return;
+
+
+        select.innerHTML = `
+
+        <option value="">
+            Select collecting vehicle
+        </option>
+
+    `;
+
+
+        vehicles
+            .filter(vehicle =>
+                vehicle.vehicleType ===
+                "WASTE_COLLECTION"
+            )
+            .forEach(vehicle => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    vehicle.vehicleId;
+
+
+                option.textContent =
+                    vehicle.vehicleNumber +
+                    " - " +
+                    vehicle.status;
+
+
+                select.appendChild(option);
+
+            });
+
+    }
+
+
+    /* =====================================
+       START GPS
+    ===================================== */
+
+    function startVehicleGPS() {
+
+        const select =
+            document.getElementById(
+                "gpsVehicleSelect"
+            );
+
+
+        const vehicleId =
+            select.value;
+
+
+        if (!vehicleId) {
+
+            showMessage(
+                "Please select a vehicle first."
+            );
+
+            return;
+
+        }
+
+
+        if (!navigator.geolocation) {
+
+            document.getElementById(
+                "gpsStatus"
+            ).textContent =
+                "❌ GPS is not supported.";
+
+            return;
+
+        }
+
+
+        stopVehicleGPS();
+
+
+        gpsVehicleId =
+            Number(vehicleId);
+
+
+        document.getElementById(
+            "gpsStatus"
+        ).textContent =
+            "📍 Starting GPS tracking...";
+
+
+        gpsWatchId =
+            navigator.geolocation.watchPosition(
+
+                function(position) {
+
+                    const latitude =
+                        position.coords.latitude;
+
+                    const longitude =
+                        position.coords.longitude;
+
+
+                    document.getElementById(
+                        "gpsStatus"
+                    ).innerHTML =
+
+                        "🟢 GPS ACTIVE<br>" +
+
+                        "Latitude: " +
+                        latitude +
+                        "<br>" +
+
+                        "Longitude: " +
+                        longitude;
+
+
+                    sendVehicleGPS(
+                        gpsVehicleId,
+                        latitude,
+                        longitude
+                    );
+
+                },
+
+
+                function(error) {
+
+                    console.error(
+                        "GPS Error:",
+                        error
+                    );
+
+
+                    let message =
+                        "Unable to get GPS location.";
+
+
+                    if (error.code === 1) {
+
+                        message =
+                            "GPS permission denied.";
+
+                    } else if (error.code === 2) {
+
+                        message =
+                            "GPS location unavailable.";
+
+                    } else if (error.code === 3) {
+
+                        message =
+                            "GPS request timed out.";
+
+                    }
+
+
+                    document.getElementById(
+                        "gpsStatus"
+                    ).textContent =
+                        "❌ " + message;
+
+                },
+
+                {
+
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+
+                }
+
+            );
+
+    }
+
+
+    /* =====================================
+       SEND GPS TO SPRING BOOT
+    ===================================== */
+
+    async function sendVehicleGPS(
+        vehicleId,
+        latitude,
+        longitude
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+
+                    VEHICLE_API +
+                    "/" +
+                    vehicleId +
+                    "/location",
+
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                latitude:
+                                latitude,
+
+                                longitude:
+                                longitude
+
+                            })
+
+                    }
+
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "GPS update failed"
+                );
+
+            }
+
+
+            console.log(
+                "GPS updated:",
+                vehicleId,
+                latitude,
+                longitude
+            );
+
+
+            /*
+                Immediately update our local
+                vehicle data so the marker can
+                move without waiting for the
+                next complete vehicle refresh.
+            */
+
+            const vehicle =
+                vehicles.find(
+                    v =>
+                        Number(v.vehicleId) ===
+                        Number(vehicleId)
+                );
+
+
+            if (vehicle) {
+
+                vehicle.latitude =
+                    latitude;
+
+                vehicle.longitude =
+                    longitude;
+
+                vehicle.lastUpdated =
+                    new Date().toLocaleString();
+
+            }
+
+
+            updateTrackingMarkers();
+
+            updateVehicleMarkers();
+
+            updateSelectedVehicleInfo();
+
+        }
+
+        catch(error) {
+
+            console.error(
+                "GPS update error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =====================================
+       STOP GPS
+    ===================================== */
+
+    function stopVehicleGPS() {
+
+        if (gpsWatchId !== null) {
+
+            navigator.geolocation.clearWatch(
+                gpsWatchId
+            );
+
+            gpsWatchId = null;
+
+        }
+
+
+        gpsVehicleId = null;
+
+
+        const status =
+            document.getElementById(
+                "gpsStatus"
+            );
+
+
+        if (status) {
+
+            status.textContent =
+                "GPS stopped.";
+
+        }
+
+    }
+
+
+    /* =====================================
+       GOOGLE MAP
+    ===================================== */
+
+    function initMap() {
+
+        const chennai = {
+
+            lat: 13.0827,
+            lng: 80.2707
+
+        };
+
+
+        map =
+            new google.maps.Map(
+                document.getElementById("map"),
+                {
+
+                    center: chennai,
+
+                    zoom:
+                    settings.mapZoom,
+
+                    mapTypeId:
+                    settings.mapType,
+
+                    mapTypeControl: true,
+
+                    streetViewControl: true,
+
+                    fullscreenControl: true
+
+                }
+            );
+
+
+        updateVehicleMarkers();
+
+        updateBinMarkers();
+
+    }
+
+
+    /* =====================================
+       TRACKING MAP
+    ===================================== */
+
+    function initTrackingMap() {
+
+        if (
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        const element =
+            document.getElementById(
+                "trackingMap"
+            );
+
+
+        if (!element) return;
+
+
+        if (!trackingMap) {
+
+            trackingMap =
+                new google.maps.Map(
+                    element,
+                    {
+
+                        center: {
+
+                            lat: 13.0827,
+                            lng: 80.2707
+
+                        },
+
+                        zoom:
+                        settings.mapZoom,
+
+                        mapTypeId:
+                        settings.mapType,
+
+                        mapTypeControl: true,
+
+                        streetViewControl: true,
+
+                        fullscreenControl: true
+
+                    }
+                );
+
+        }
+
+
+        google.maps.event.trigger(
+            trackingMap,
+            "resize"
+        );
+
+
+        updateTrackingMarkers();
+
+        updateSelectedVehicleInfo();
+
+        focusSelectedVehicle();
+
+    }
+
+
+    /* =====================================
+       MAP SETTINGS
+    ===================================== */
+
+    function applyMapSettings() {
+
+        if (map) {
+
+            map.setZoom(
+                settings.mapZoom
+            );
+
+            map.setMapTypeId(
+                settings.mapType
+            );
+
+        }
+
+
+        if (trackingMap) {
+
+            trackingMap.setMapTypeId(
+                settings.mapType
+            );
+
+            /*
+                Don't override selected vehicle
+                zoom unnecessarily.
+            */
+            if (
+                selectedTrackingVehicleId === null
+            ) {
+
+                trackingMap.setZoom(
+                    settings.mapZoom
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /* =====================================
+       VEHICLE MARKERS
+    ===================================== */
+
+    function updateVehicleMarkers() {
+
+        if (
+            !map ||
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        vehicleMarkers.forEach(
+            marker => marker.setMap(null)
+        );
+
+
+        vehicleMarkers = [];
+
+
+        let visibleVehicles =
+            vehicles.filter(vehicle =>
+                vehicle.vehicleType ===
+                "WASTE_COLLECTION"
+            );
+
+
+        if (settings.collectingOnly) {
+
+            visibleVehicles =
+                visibleVehicles.filter(vehicle =>
+                    vehicle.status ===
+                    "COLLECTING"
+                );
+
+        }
+
+
+        visibleVehicles.forEach(vehicle => {
+
+            if (
+                vehicle.latitude == null ||
+                vehicle.longitude == null
+            ) {
+
+                return;
+
+            }
+
+
+            const marker =
+                new google.maps.Marker({
+
+                    position: {
+
+                        lat:
+                            Number(
+                                vehicle.latitude
+                            ),
+
+                        lng:
+                            Number(
+                                vehicle.longitude
+                            )
+
+                    },
+
+                    map: map,
+
+                    title:
+                    vehicle.vehicleNumber,
+
+                    label: {
+
+                        text: "🚛",
+
+                        fontSize: "22px"
+
+                    }
+
+                });
+
+
+            const infoWindow =
+                new google.maps.InfoWindow({
+
+                    content: `
+
+                    <div style="padding:8px">
+
+                        <h3>
+                            🚛 Waste Collection
+                        </h3>
+
+                        <br>
+
+                        <b>Vehicle:</b>
+                        ${vehicle.vehicleNumber}
+
+                        <br>
+
+                        <b>Driver:</b>
+                        ${vehicle.driver ?? "-"}
+
+                        <br>
+
+                        <b>Status:</b>
+                        ${vehicle.status}
+
+                        <br>
+
+                        <b>GPS:</b>
+                        ${vehicle.latitude},
+                        ${vehicle.longitude}
+
+                        <br>
+
+                        <b>Updated:</b>
+                        ${vehicle.lastUpdated ?? "-"}
+
+                    </div>
+
+                `
+
+                });
+
+
+            marker.addListener(
+                "click",
+                () =>
+                    infoWindow.open(
+                        map,
+                        marker
+                    )
+            );
+
+
+            vehicleMarkers.push(marker);
+
+        });
+
+    }
+
+
+    /* =====================================
+       BIN MARKERS
+    ===================================== */
+
+    function updateBinMarkers() {
+
+        if (
+            !map ||
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        binMarkers.forEach(
+            marker => marker.setMap(null)
+        );
+
+
+        binMarkers = [];
+
+
+        bins.forEach(bin => {
+
+            if (
+                bin.latitude == null ||
+                bin.longitude == null
+            ) {
+
+                return;
+
+            }
+
+
+            const marker =
+                new google.maps.Marker({
+
+                    position: {
+
+                        lat:
+                            Number(
+                                bin.latitude
+                            ),
+
+                        lng:
+                            Number(
+                                bin.longitude
+                            )
+
+                    },
+
+                    map: map,
+
+                    title:
+                        "Bin #" +
+                        bin.binId,
+
+                    label: {
+
+                        text: "🗑️",
+
+                        fontSize: "20px"
+
+                    }
+
+                });
+
+
+            const infoWindow =
+                new google.maps.InfoWindow({
+
+                    content: `
+
+                    <div style="padding:8px">
+
+                        <h3>
+                            🗑️ Waste Bin
+                        </h3>
+
+                        <br>
+
+                        <b>Bin ID:</b>
+                        ${bin.binId}
+
+                        <br>
+
+                        <b>Location:</b>
+                        ${bin.location ?? "-"}
+
+                        <br>
+
+                        <b>Capacity:</b>
+                        ${bin.capacity ?? "-"}
+
+                        <br>
+
+                        <b>Fill Level:</b>
+                        ${bin.fillLevel ?? 0}%
+
+                        <br>
+
+                        <b>Status:</b>
+                        ${bin.status ?? "-"}
+
+                    </div>
+
+                `
+
+                });
+
+
+            marker.addListener(
+                "click",
+                () =>
+                    infoWindow.open(
+                        map,
+                        marker
+                    )
+            );
+
+
+            binMarkers.push(marker);
+
+        });
+
+    }
+
+
+    /* =====================================
+       ⭐ LIVE TRACKING MARKERS
+    ===================================== */
+
+    function updateTrackingMarkers() {
+
+        if (
+            !trackingMap ||
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        if (!settings.trackingEnabled) {
+
+            trackingMarkers.forEach(
+                marker => marker.setMap(null)
+            );
+
+            trackingMarkers = [];
+
+            return;
+
+        }
+
+
+        /*
+            If user selected a vehicle,
+            show that vehicle.
+        */
+
+        let vehiclesToTrack = [];
+
+
+        if (selectedTrackingVehicleId !== null) {
+
+            const selectedVehicle =
+                vehicles.find(
+                    vehicle =>
+                        Number(vehicle.vehicleId) ===
+                        Number(selectedTrackingVehicleId)
+                );
+
+
+            if (selectedVehicle) {
+
+                vehiclesToTrack =
+                    [selectedVehicle];
+
+            }
+
+        } else {
+
+            vehiclesToTrack =
+                vehicles.filter(vehicle =>
+                    vehicle.vehicleType ===
+                    "WASTE_COLLECTION"
+                );
+
+
+            if (settings.collectingOnly) {
+
+                vehiclesToTrack =
+                    vehiclesToTrack.filter(vehicle =>
+                        vehicle.status ===
+                        "COLLECTING"
+                    );
+
+            }
+
+        }
+
+
+        const activeIds =
+            vehiclesToTrack.map(
+                vehicle =>
+                    Number(vehicle.vehicleId)
+            );
+
+
+        /*
+            Remove markers that are no longer active.
+        */
+
+        trackingMarkers =
+            trackingMarkers.filter(marker => {
+
+                if (
+                    !activeIds.includes(
+                        Number(marker.vehicleId)
+                    )
+                ) {
+
+                    marker.setMap(null);
+
+                    return false;
+
+                }
+
+                return true;
+
+            });
+
+
+        /*
+            Create or move markers.
+        */
+
+        vehiclesToTrack.forEach(vehicle => {
+
+            if (
+                vehicle.latitude == null ||
+                vehicle.longitude == null
+            ) {
+
+                return;
+
+            }
+
+
+            const position = {
+
+                lat:
+                    Number(
+                        vehicle.latitude
+                    ),
+
+                lng:
+                    Number(
+                        vehicle.longitude
+                    )
+
+            };
+
+
+            let marker =
+                trackingMarkers.find(
+                    m =>
+                        Number(m.vehicleId) ===
+                        Number(vehicle.vehicleId)
+                );
+
+
+            /*
+                Create marker if it doesn't exist.
+            */
+
+            if (!marker) {
+
+                marker =
+                    new google.maps.Marker({
+
+                        position:
+                        position,
+
+                        map:
+                        trackingMap,
+
+                        title:
+                        vehicle.vehicleNumber,
+
+                        label: {
+
+                            text:
+                                "🚛",
+
+                            fontSize:
+                                "25px"
+
+                        },
+
+                        animation:
+                        google.maps.Animation.DROP
+
+                    });
+
+
+                marker.vehicleId =
+                    vehicle.vehicleId;
+
+
+                const infoWindow =
+                    new google.maps.InfoWindow();
+
+
+                marker.addListener(
+                    "click",
+                    function() {
+
+                        const currentVehicle =
+                            vehicles.find(
+                                v =>
+                                    Number(v.vehicleId) ===
+                                    Number(marker.vehicleId)
+                            );
+
+
+                        if (!currentVehicle)
+                            return;
+
+
+                        infoWindow.setContent(`
+
+                        <div style="padding:10px">
+
+                            <h3>
+                                🚛 LIVE VEHICLE
+                            </h3>
+
+                            <br>
+
+                            <b>Vehicle:</b>
+                            ${currentVehicle.vehicleNumber}
+
+                            <br>
+
+                            <b>Driver:</b>
+                            ${currentVehicle.driver ?? "-"}
+
+                            <br>
+
+                            <b>Status:</b>
+                            ${currentVehicle.status}
+
+                            <br>
+
+                            <b>Latitude:</b>
+                            ${currentVehicle.latitude}
+
+                            <br>
+
+                            <b>Longitude:</b>
+                            ${currentVehicle.longitude}
+
+                            <br>
+
+                            <b>Last Update:</b>
+                            ${currentVehicle.lastUpdated ?? "-"}
+
+                        </div>
+
+                    `);
+
+
+                        infoWindow.open(
+                            trackingMap,
+                            marker
+                        );
+
+                    }
+                );
+
+
+                trackingMarkers.push(marker);
+
+            }
+
+
+            /*
+                ⭐ THIS IS THE IMPORTANT PART.
+
+                Every time new latitude/longitude
+                arrives, the marker moves.
+            */
+
+            marker.setPosition(position);
+
+
+            /*
+                If this is the selected vehicle,
+                keep the map centered on it.
+            */
+
+            if (
+                Number(vehicle.vehicleId) ===
+                Number(selectedTrackingVehicleId)
+            ) {
+
+                trackingMap.panTo(position);
+
+            }
+
+        });
+
+
+        updateSelectedVehicleInfo();
+
+    }
+
+
+    /* =====================================
+       ⭐ STOP LIVE TRACKING
+    ===================================== */
+
+    function stopLiveTracking() {
+
+        selectedTrackingVehicleId = null;
+
+
+        trackingMarkers.forEach(
+            marker =>
+                marker.setMap(null)
+        );
+
+
+        trackingMarkers = [];
+
+
+        const info =
+            document.getElementById(
+                "selectedVehicleInfo"
+            );
+
+
+        if (info) {
+
+            info.innerHTML =
+                "🚛 No vehicle selected. Go to Vehicles and click Track Vehicle.";
+
+        }
+
+
+        const details =
+            document.getElementById(
+                "trackingDetails"
+            );
+
+
+        if (details) {
+
+            details.style.display =
+                "none";
+
+        }
+
+
+        const button =
+            document.getElementById(
+                "stopTrackingButton"
+            );
+
+
+        if (button) {
+
+            button.style.display =
+                "none";
+
+        }
+
+
+        if (trackingMap) {
+
+            trackingMap.setZoom(
+                settings.mapZoom
+            );
+
+        }
+
+
+        displayVehicles();
+
+    }
+
+
+    /* =====================================
+       AUTO REFRESH
+    ===================================== */
+
+    function startAutoRefresh() {
+
+        if (refreshTimer) {
+
+            clearInterval(refreshTimer);
+
+            refreshTimer = null;
+
+        }
+
+
+        if (
+            !settings.autoRefresh ||
+            !settings.trackingEnabled
+        ) {
+
+            return;
+
+        }
+
+
+        refreshTimer =
+            setInterval(
+                () => {
+
+                    /*
+                        Get latest vehicle coordinates
+                        from Spring Boot/MySQL.
+                    */
+
+                    loadVehicles();
+
+                },
+                settings.refreshInterval * 1000
+            );
+
+    }
+
+
+    /* =====================================
+       STATISTICS
+    ===================================== */
+
+    function updateStatistics() {
+
+        const collecting =
+            vehicles.filter(vehicle =>
+
+                vehicle.vehicleType ===
+                "WASTE_COLLECTION" &&
+
+                vehicle.status ===
+                "COLLECTING"
+
+            ).length;
+
+
+        const normal =
+            bins.filter(
+                bin =>
+                    bin.status === "NORMAL"
+            ).length;
+
+
+        const critical =
+            bins.filter(
+                bin =>
+                    bin.status === "CRITICAL"
+            ).length;
+
+
+        document.getElementById(
+            "totalBins"
+        ).textContent =
+            bins.length;
+
+
+        document.getElementById(
+            "normalBins"
+        ).textContent =
+            normal;
+
+
+        document.getElementById(
+            "criticalBins"
+        ).textContent =
+            critical;
+
+
+        document.getElementById(
+            "collectingVehicles"
+        ).textContent =
+            collecting;
+
+
+        document.getElementById(
+            "reportBins"
+        ).textContent =
+            bins.length;
+
+
+        document.getElementById(
+            "reportNormal"
+        ).textContent =
+            normal;
+
+
+        document.getElementById(
+            "reportCritical"
+        ).textContent =
+            critical;
+
+
+        document.getElementById(
+            "reportVehicles"
+        ).textContent =
+            collecting;
+
+    }
+
+
+    /* =====================================
+       LOCATIONS
+    ===================================== */
+
+    function loadLocations() {
+
+        const container =
+            document.getElementById(
+                "locationsContainer"
+            );
+
+
+        if (!bins.length) {
+
+            container.innerHTML =
+                "No locations found.";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        bins.forEach(bin => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.style.padding =
+                "12px";
+
+            div.style.borderBottom =
+                "1px solid var(--border)";
+
+
+            div.innerHTML = `
+
+            📍
+
+            <strong>
+                ${bin.location ?? "-"}
+            </strong>
+
+            <br>
+
+            Latitude:
+            ${bin.latitude ?? "-"}
+
+            <br>
+
+            Longitude:
+            ${bin.longitude ?? "-"}
+
+        `;
+
+
+            container.appendChild(div);
+
+        });
+
+    }
+
+
+    /* =====================================
+       ACCESSIBILITY
+    ===================================== */
+
+    function increaseFont() {
+
+        document.body.classList.add(
+            "large-font"
+        );
+
+        localStorage.setItem(
+            "largeFont",
+            "true"
+        );
+
+    }
+
+
+    function decreaseFont() {
+
+        document.body.classList.remove(
+            "large-font"
+        );
+
+        localStorage.setItem(
+            "largeFont",
+            "false"
+        );
+
+    }
+
+
+    function toggleDarkMode() {
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+        localStorage.setItem(
+            "darkMode",
+            document.body.classList.contains(
+                "dark"
+            )
+        );
+
+    }
+
+
+    function toggleContrast() {
+
+        document.body.classList.toggle(
+            "high-contrast"
+        );
+
+        localStorage.setItem(
+            "highContrast",
+            document.body.classList.contains(
+                "high-contrast"
+            )
+        );
+
+    }
+
+
+    /* =====================================
+       MESSAGE
+    ===================================== */
+
+    function showMessage(text) {
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        message.textContent =
+            text;
+
+
+        message.style.display =
+            "block";
+
+
+        setTimeout(() => {
+
+            message.style.display =
+                "none";
+
+        }, 3000);
+
+    }
+
+
+    /* =====================================
+       RESTORE ACCESSIBILITY
+    ===================================== */
+
+    function restoreAccessibility() {
+
+        if (
+            localStorage.getItem(
+                "largeFont"
+            ) === "true"
+        ) {
+
+            document.body.classList.add(
+                "large-font"
+            );
+
+        }
+
+
+        if (
+            localStorage.getItem(
+                "darkMode"
+            ) === "true"
+        ) {
+
+            document.body.classList.add(
+                "dark"
+            );
+
+        }
+
+
+        if (
+            localStorage.getItem(
+                "highContrast"
+            ) === "true"
+        ) {
+
+            document.body.classList.add(
+                "high-contrast"
+            );
+
+        }
+
+    }
+
+
+    /* =====================================
+       START APPLICATION
+    ===================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+
+            checkLogin();
+
+            loadSettings();
+
+            restoreAccessibility();
+
+            loadBins();
+
+            loadVehicles();
+
+            startAutoRefresh();
+
+        }
+    );
+
+</script>
+
+
+<!-- =========================
+     GOOGLE MAPS
+========================= -->
+
+<script
+        async
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3uulFnOAD8vyt5SN_sLi30DnGuMVa5fY&callback=initMap">
+</script>
+
+</body>
+</html>
