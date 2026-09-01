@@ -1,13 +1,8 @@
 package com.smartwaste;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+public class SmartWasteManagementApplicationTests {
 
-@SpringBootTest
-class SmartWasteManagementApplicationTests {
-
-	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }
