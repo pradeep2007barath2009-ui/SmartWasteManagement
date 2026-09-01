@@ -22,11 +22,12 @@
             --background: #f4f7f5;
             --card: #ffffff;
             --text: #17251b;
-            --muted: #6c776f;
+            --muted: #5b665d;
             --border: #dce5de;
-            --danger: #d32f2f;
-            --warning: #ed9b00;
+            --danger: #c62828;
+            --warning: #a15c00;
             --blue: #1976d2;
+            --focus: #0b57d0;
         }
 
         body {
@@ -40,9 +41,10 @@
             --background: #121714;
             --card: #1d2520;
             --text: #f2f7f3;
-            --muted: #aab7ae;
+            --muted: #b7c3ba;
             --border: #344139;
             --secondary: #26352b;
+            --focus: #8ab4ff;
         }
 
         body.large-font {
@@ -57,6 +59,7 @@
             --text: #000;
             --muted: #000;
             --border: #000;
+            --focus: #000;
         }
 
         button,
@@ -67,6 +70,47 @@
 
         button {
             cursor: pointer;
+        }
+
+        /* =========================
+           ACCESSIBILITY HELPERS
+        ========================= */
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 12px 18px;
+            z-index: 100000;
+            border-radius: 0 0 8px 0;
+            font-weight: bold;
+        }
+
+        .skip-link:focus {
+            left: 0;
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        [tabindex]:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 2px;
         }
 
         /* =========================
@@ -106,7 +150,7 @@
         }
 
         .auth-logo p {
-            color: #6c776f;
+            color: #55605a;
             margin-top: 5px;
         }
 
@@ -114,10 +158,21 @@
             margin-bottom: 18px;
         }
 
+        .auth-field {
+            margin-bottom: 12px;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #17251b;
+        }
+
         .auth-input {
             width: 100%;
             padding: 12px;
-            margin-bottom: 12px;
             border: 1px solid #dce5de;
             border-radius: 8px;
             outline: none;
@@ -141,7 +196,7 @@
         .auth-switch {
             text-align: center;
             margin-top: 18px;
-            color: #6c776f;
+            color: #55605a;
         }
 
         .auth-switch button {
@@ -149,6 +204,7 @@
             background: none;
             color: #176b3a;
             font-weight: bold;
+            text-decoration: underline;
         }
 
         #authMessage {
@@ -174,6 +230,7 @@
             color: white;
             padding: 22px 15px;
             z-index: 1000;
+            overflow-y: auto;
         }
 
         .brand {
@@ -205,7 +262,7 @@
 
         .menu-title {
             font-size: 11px;
-            color: #9fbea8;
+            color: #cfe6d4;
             margin: 20px 10px 8px;
             text-transform: uppercase;
         }
@@ -220,7 +277,7 @@
             width: 100%;
             border: 0;
             background: transparent;
-            color: #dceade;
+            color: #eef6f0;
             text-align: left;
             padding: 13px 14px;
             border-radius: 9px;
@@ -230,9 +287,14 @@
         }
 
         .menu button:hover,
-        .menu button.active {
+        .menu button.active,
+        .menu button[aria-current="page"] {
             background: #28663d;
             color: white;
+        }
+
+        .menu button[aria-current="page"] {
+            box-shadow: inset 3px 0 0 #ffffff;
         }
 
         /* =========================
@@ -242,6 +304,10 @@
         .main {
             margin-left: 250px;
             padding: 25px;
+        }
+
+        .main:focus {
+            outline: none;
         }
 
         .topbar {
@@ -276,6 +342,10 @@
             padding: 6px 10px;
             border-radius: 10px;
             transition: .2s;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            text-align: left;
         }
 
         .admin-info:hover {
@@ -458,7 +528,7 @@
         }
 
         .btn.secondary {
-            background: #607d68;
+            background: #4c6353;
         }
 
         .btn.danger {
@@ -476,7 +546,20 @@
         }
 
         .btn.stop-track {
-            background: #d32f2f;
+            background: #c62828;
+        }
+
+        .btn.assign {
+            background: #1976d2;
+        }
+
+        .btn.unassign {
+            background: #4c6353;
+        }
+
+        .btn.auto-assign {
+            background: #176b3a;
+            width: 100%;
         }
 
         /* =========================
@@ -484,7 +567,8 @@
         ========================= */
 
         #map,
-        #trackingMap {
+        #trackingMap,
+        #addBinMap {
             width: 100%;
             height: 500px;
             border-radius: 12px;
@@ -495,7 +579,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #258345;
+            color: #1c6b39;
             font-size: 13px;
             font-weight: bold;
         }
@@ -506,6 +590,12 @@
             background: #27ae60;
             border-radius: 50%;
             animation: pulse 1.5s infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .live-dot {
+                animation: none;
+            }
         }
 
         @keyframes pulse {
@@ -593,17 +683,17 @@
 
         .status.collecting {
             background: #fff0c2;
-            color: #765900;
+            color: #5c4600;
         }
 
         .status.available {
             background: #daf2df;
-            color: #17642b;
+            color: #124d20;
         }
 
         .status.offline {
             background: #eeeeee;
-            color: #555;
+            color: #3d3d3d;
         }
 
         /* =========================
@@ -651,6 +741,56 @@
         }
 
         #gpsStatus {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           AUTO ASSIGN
+        ========================= */
+
+        .auto-assign-panel {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            background: var(--secondary);
+        }
+
+        .auto-assign-panel h3 {
+            margin-bottom: 8px;
+        }
+
+        .auto-assign-panel p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .auto-assign-controls {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .auto-assign-controls label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .auto-assign-controls input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        #autoResult {
             margin-top: 12px;
             font-size: 13px;
             font-weight: bold;
@@ -735,7 +875,7 @@
 
         .progress-bar {
             height: 100%;
-            background: #4caf50;
+            background: #35843f;
         }
 
         .progress-warning {
@@ -744,6 +884,101 @@
 
         .progress-danger {
             background: var(--danger);
+        }
+
+        /* =========================
+           ASSIGNMENT
+        ========================= */
+
+        .assignment-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+
+        .bin-actions,
+        .vehicle-actions-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .bin-actions .btn,
+        .vehicle-actions-row .btn {
+            flex: 1;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 440px;
+            max-width: 92%;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+        }
+
+        .modal-box h3 {
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .modal-box > p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .assign-vehicle-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
+        .assign-vehicle-option:hover,
+        .assign-vehicle-option:focus-within {
+            border-color: var(--primary);
+        }
+
+        .assign-vehicle-option .avo-info strong {
+            display: block;
+        }
+
+        .assign-vehicle-option .avo-info small {
+            display: block;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .modal-close-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
         }
 
         /* =========================
@@ -813,6 +1048,10 @@
             border-bottom: 0;
         }
 
+        .setting-row > label {
+            font-weight: normal;
+        }
+
         /* =========================
            SWITCH
         ========================= */
@@ -825,15 +1064,26 @@
         }
 
         .switch input {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .switch input:focus-visible + .slider {
+            outline: 3px solid var(--focus);
+            outline-offset: 2px;
         }
 
         .slider {
             position: absolute;
             inset: 0;
-            background: #bbb;
+            background: #767676;
             border-radius: 20px;
             cursor: pointer;
+            pointer-events: none;
         }
 
         .slider:before {
@@ -849,7 +1099,7 @@
         }
 
         .switch input:checked + .slider {
-            background: #2e7d32;
+            background: #256b2c;
         }
 
         .switch input:checked + .slider:before {
@@ -857,7 +1107,7 @@
         }
 
         /* =========================
-           ACCESSIBILITY
+           ACCESSIBILITY PANEL
         ========================= */
 
         .accessibility-box {
@@ -874,6 +1124,12 @@
             color: var(--text);
         }
 
+        .accessibility-box button[aria-pressed="true"] {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
         /* =========================
            MESSAGE
         ========================= */
@@ -883,7 +1139,7 @@
             padding: 12px;
             border-radius: 8px;
             background: #d9f2df;
-            color: #17642b;
+            color: #0f4d1e;
             margin-bottom: 20px;
         }
 
@@ -929,7 +1185,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .gps-controls {
+            .gps-controls,
+            .auto-assign-controls {
                 grid-template-columns: 1fr;
             }
 
@@ -943,7 +1200,8 @@
             }
 
             #map,
-            #trackingMap {
+            #trackingMap,
+            #addBinMap {
                 height: 400px;
             }
 
@@ -958,21 +1216,23 @@
 
 <body>
 
+<a href="#mainContent" class="skip-link">Skip to main content</a>
+
 <!-- =========================
      LOGIN
 ========================= -->
 
-<div id="authScreen">
+<div id="authScreen" role="dialog" aria-modal="true" aria-labelledby="authHeading">
 
     <div class="auth-card">
 
         <div class="auth-logo">
 
-            <div class="auth-logo-icon">
+            <div class="auth-logo-icon" aria-hidden="true">
                 ♻️
             </div>
 
-            <h2>SmartWaste</h2>
+            <h2 id="authHeading">SmartWaste</h2>
 
             <p>
                 Management System
@@ -983,20 +1243,27 @@
         <div id="loginBox">
 
             <h3 class="auth-title">
-                🔐 Login
+                <span aria-hidden="true">🔐</span> Login
             </h3>
 
-            <input
-                    id="loginEmail"
-                    class="auth-input"
-                    type="email"
-                    placeholder="Email">
+            <div class="auth-field">
+                <label for="loginEmail">Email</label>
+                <input
+                        id="loginEmail"
+                        class="auth-input"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="you@example.com">
+            </div>
 
-            <input
-                    id="loginPassword"
-                    class="auth-input"
-                    type="password"
-                    placeholder="Password">
+            <div class="auth-field">
+                <label for="loginPassword">Password</label>
+                <input
+                        id="loginPassword"
+                        class="auth-input"
+                        type="password"
+                        autocomplete="current-password">
+            </div>
 
             <button
                     class="auth-btn"
@@ -1008,7 +1275,7 @@
 
                 Don't have an account?
 
-                <button onclick="showSignup()">
+                <button type="button" onclick="showSignup()">
                     Sign Up
                 </button>
 
@@ -1019,32 +1286,44 @@
         <div id="signupBox" style="display:none">
 
             <h3 class="auth-title">
-                📝 Create Account
+                <span aria-hidden="true">📝</span> Create Account
             </h3>
 
-            <input
-                    id="signupName"
-                    class="auth-input"
-                    type="text"
-                    placeholder="Full Name">
+            <div class="auth-field">
+                <label for="signupName">Full Name</label>
+                <input
+                        id="signupName"
+                        class="auth-input"
+                        type="text"
+                        autocomplete="name">
+            </div>
 
-            <input
-                    id="signupEmail"
-                    class="auth-input"
-                    type="email"
-                    placeholder="Email">
+            <div class="auth-field">
+                <label for="signupEmail">Email</label>
+                <input
+                        id="signupEmail"
+                        class="auth-input"
+                        type="email"
+                        autocomplete="email">
+            </div>
 
-            <input
-                    id="signupPassword"
-                    class="auth-input"
-                    type="password"
-                    placeholder="Password">
+            <div class="auth-field">
+                <label for="signupPassword">Password</label>
+                <input
+                        id="signupPassword"
+                        class="auth-input"
+                        type="password"
+                        autocomplete="new-password">
+            </div>
 
-            <input
-                    id="signupConfirmPassword"
-                    class="auth-input"
-                    type="password"
-                    placeholder="Confirm Password">
+            <div class="auth-field">
+                <label for="signupConfirmPassword">Confirm Password</label>
+                <input
+                        id="signupConfirmPassword"
+                        class="auth-input"
+                        type="password"
+                        autocomplete="new-password">
+            </div>
 
             <button
                     class="auth-btn"
@@ -1056,7 +1335,7 @@
 
                 Already have an account?
 
-                <button onclick="showLogin()">
+                <button type="button" onclick="showLogin()">
                     Login
                 </button>
 
@@ -1064,7 +1343,7 @@
 
         </div>
 
-        <div id="authMessage"></div>
+        <div id="authMessage" role="status" aria-live="polite"></div>
 
     </div>
 
@@ -1074,11 +1353,11 @@
      SIDEBAR
 ========================= -->
 
-<aside class="sidebar">
+<aside class="sidebar" aria-label="Sidebar">
 
     <div class="brand">
 
-        <div class="brand-icon">
+        <div class="brand-icon" aria-hidden="true">
             ♻️
         </div>
 
@@ -1094,57 +1373,62 @@
 
     </div>
 
-    <div class="menu-title">
+    <h2 class="menu-title" id="mainMenuHeading">
         Main Menu
-    </div>
+    </h2>
 
-    <nav class="menu">
+    <nav class="menu" aria-labelledby="mainMenuHeading">
 
         <button
                 id="dashboardBtn"
                 class="active"
+                aria-current="page"
                 onclick="showPage('dashboard',this)">
-            📊 Dashboard
+            <span aria-hidden="true">📊</span> Dashboard
         </button>
 
         <button
+                id="binsBtn"
                 onclick="showPage('bins',this)">
-            🗑️ Waste Bins
+            <span aria-hidden="true">🗑️</span> Waste Bins
         </button>
 
         <button
                 id="vehiclesBtn"
                 onclick="showPage('vehicles',this)">
-            🚛 Vehicles
+            <span aria-hidden="true">🚛</span> Vehicles
         </button>
 
         <button
                 id="trackingBtn"
                 onclick="showPage('tracking',this)">
-            📍 Live Tracking
+            <span aria-hidden="true">📍</span> Live Tracking
         </button>
 
     </nav>
 
-    <div class="menu-title">
+    <h2 class="menu-title" id="mgmtMenuHeading">
         Management
-    </div>
+    </h2>
 
-    <nav class="menu">
+    <nav class="menu" aria-labelledby="mgmtMenuHeading">
 
         <button
+                id="locationsBtn"
                 onclick="showPage('locations',this)">
-            📌 Locations
+            <span aria-hidden="true">📌</span> Locations
         </button>
 
         <button
+                id="reportsBtn"
                 onclick="showPage('reports',this)">
-            📈 Reports
+            <span aria-hidden="true">📈</span> Reports
         </button>
 
         <button
+                id="settingsBtn"
                 onclick="showPage('settings',this)">
-            ⚙️ Settings
+            <span aria-hidden="true">⚙️</span> Settings
         </button>
 
     </nav>
@@ -1155,7 +1439,7 @@
      MAIN
 ========================= -->
 
-<main class="main">
+<main class="main" id="mainContent" tabindex="-1">
 
     <div class="topbar">
 
@@ -1176,10 +1460,17 @@
             <button
                     onclick="logoutUser()"
                     class="btn danger">
-                🚪 Logout
+                <span aria-hidden="true">🚪</span> Logout
             </button>
 
-            <div class="admin-info" id="adminInfoToggle" onclick="toggleProfileDropdown(event)">
+            <button
+                    type="button"
+                    class="admin-info"
+                    id="adminInfoToggle"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="profileDropdown"
+                    onclick="toggleProfileDropdown(event)">
 
                 <div>
 
@@ -1195,44 +1486,46 @@
 
                 </div>
 
-                <div class="avatar">
+                <div class="avatar" aria-hidden="true">
                     👤
                 </div>
 
-            </div>
+            </button>
 
             <!-- =========================
                  PROFILE / ACCOUNT SETTINGS
             ========================= -->
 
-            <div id="profileDropdown" class="profile-dropdown">
+            <div id="profileDropdown" class="profile-dropdown" role="region" aria-label="Account settings">
 
                 <h3>
-                    👤 Account Settings
+                    <span aria-hidden="true">👤</span> Account Settings
                 </h3>
 
                 <div class="profile-field">
 
-                    <label>
+                    <label for="profileName">
                         Full Name
                     </label>
 
                     <input
                             id="profileName"
                             type="text"
+                            autocomplete="name"
                             placeholder="Full Name">
 
                 </div>
 
                 <div class="profile-field">
 
-                    <label>
+                    <label for="profileEmail">
                         Email
                     </label>
 
                     <input
                             id="profileEmail"
                             type="email"
+                            autocomplete="email"
                             placeholder="Email">
 
                 </div>
@@ -1241,39 +1534,42 @@
 
                 <div class="profile-field">
 
-                    <label>
+                    <label for="profileCurrentPassword">
                         Current Password
                     </label>
 
                     <input
                             id="profileCurrentPassword"
                             type="password"
+                            autocomplete="current-password"
                             placeholder="Required to save changes">
 
                 </div>
 
                 <div class="profile-field">
 
-                    <label>
+                    <label for="profileNewPassword">
                         New Password (optional)
                     </label>
 
                     <input
                             id="profileNewPassword"
                             type="password"
+                            autocomplete="new-password"
                             placeholder="Leave blank to keep current password">
 
                 </div>
 
                 <div class="profile-field">
 
-                    <label>
+                    <label for="profileConfirmPassword">
                         Confirm New Password
                     </label>
 
                     <input
                             id="profileConfirmPassword"
                             type="password"
+                            autocomplete="new-password"
                             placeholder="Confirm new password">
 
                 </div>
@@ -1281,20 +1577,22 @@
                 <div class="profile-actions">
 
                     <button
+                            type="button"
                             class="btn secondary"
-                            onclick="closeProfileDropdown()">
+                            onclick="closeProfileDropdown(true)">
                         Cancel
                     </button>
 
                     <button
+                            type="button"
                             class="btn"
                             onclick="saveProfile()">
-                        💾 Save Changes
+                        <span aria-hidden="true">💾</span> Save Changes
                     </button>
 
                 </div>
 
-                <div id="profileMessage"></div>
+                <div id="profileMessage" role="status" aria-live="polite"></div>
 
             </div>
 
@@ -1302,7 +1600,7 @@
 
     </div>
 
-    <div id="message"></div>
+    <div id="message" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <!-- =========================
          DASHBOARD
@@ -1310,23 +1608,25 @@
 
     <section
             id="dashboard"
-            class="page active">
+            class="page active"
+            aria-labelledby="pageTitle">
 
         <div class="stats">
 
             <div class="card">
 
-                <div class="stat-icon">
+                <div class="stat-icon" aria-hidden="true">
                     🗑️
                 </div>
 
-                <div class="stat-title">
+                <div class="stat-title" id="totalBinsLabel">
                     Total Waste Bins
                 </div>
 
                 <div
                         class="stat-number"
-                        id="totalBins">
+                        id="totalBins"
+                        aria-labelledby="totalBinsLabel">
                     0
                 </div>
 
@@ -1334,17 +1634,18 @@
 
             <div class="card">
 
-                <div class="stat-icon">
+                <div class="stat-icon" aria-hidden="true">
                     🟢
                 </div>
 
-                <div class="stat-title">
+                <div class="stat-title" id="normalBinsLabel">
                     Normal Bins
                 </div>
 
                 <div
                         class="stat-number"
-                        id="normalBins">
+                        id="normalBins"
+                        aria-labelledby="normalBinsLabel">
                     0
                 </div>
 
@@ -1352,17 +1653,18 @@
 
             <div class="card">
 
-                <div class="stat-icon">
+                <div class="stat-icon" aria-hidden="true">
                     🚛
                 </div>
 
-                <div class="stat-title">
+                <div class="stat-title" id="collectingVehiclesLabel">
                     Collecting Vehicles
                 </div>
 
                 <div
                         class="stat-number"
-                        id="collectingVehicles">
+                        id="collectingVehicles"
+                        aria-labelledby="collectingVehiclesLabel">
                     0
                 </div>
 
@@ -1370,17 +1672,18 @@
 
             <div class="card">
 
-                <div class="stat-icon">
+                <div class="stat-icon" aria-hidden="true">
                     🔴
                 </div>
 
-                <div class="stat-title">
+                <div class="stat-title" id="criticalBinsLabel">
                     Critical Bins
                 </div>
 
                 <div
                         class="stat-number"
-                        id="criticalBins">
+                        id="criticalBins"
+                        aria-labelledby="criticalBinsLabel">
                     0
                 </div>
 
@@ -1395,7 +1698,7 @@
                 <div>
 
                     <h2>
-                        🚛 Live Waste Collection Tracking
+                        <span aria-hidden="true">🚛</span> Live Waste Collection Tracking
                     </h2>
 
                     <p>
@@ -1406,15 +1709,15 @@
 
                 <div class="live-status">
 
-                    <span class="live-dot"></span>
+                    <span class="live-dot" aria-hidden="true"></span>
 
-                    LIVE
+                    <span>LIVE</span>
 
                 </div>
 
             </div>
 
-            <div id="map"></div>
+            <div id="map" role="application" aria-label="Map showing live locations of waste collection vehicles"></div>
 
         </div>
 
@@ -1426,7 +1729,8 @@
 
     <section
             id="bins"
-            class="page">
+            class="page"
+            aria-label="Waste Bins">
 
         <div class="panel">
 
@@ -1434,8 +1738,8 @@
 
                 <div>
 
-                    <h2>
-                        🗑️ Waste Bins
+                    <h2 id="binsHeading">
+                        <span aria-hidden="true">🗑️</span> Waste Bins
                     </h2>
 
                     <p>
@@ -1447,14 +1751,16 @@
                 <button
                         class="btn"
                         onclick="loadBins()">
-                    🔄 Refresh
+                    <span aria-hidden="true">🔄</span> Refresh
                 </button>
 
             </div>
 
             <div
                     class="bin-grid"
-                    id="binsContainer">
+                    id="binsContainer"
+                    role="list"
+                    aria-labelledby="binsHeading">
 
                 Loading...
 
@@ -1464,72 +1770,67 @@
 
         <div class="panel">
 
-            <h2>
-                ➕ Add Waste Bin
+            <h2 id="addBinHeading">
+                <span aria-hidden="true">➕</span> Add Waste Bin
             </h2>
 
             <br>
 
-            <form id="binForm">
+            <div class="gps-panel" style="margin-bottom:18px;">
+
+                <h3 id="pickLocationHeading">
+                    <span aria-hidden="true">🗺️</span> Bin Location
+                </h3>
+
+                <p>
+                    Click anywhere on the map to place the new bin. The address and coordinates fill in automatically. You can also drag the pin to fine-tune it.
+                </p>
+
+                <div id="addBinMap" role="application" aria-label="Map for selecting a new waste bin's location"></div>
+
+                <div
+                        id="binLocationStatus"
+                        role="status"
+                        aria-live="polite"
+                        style="margin-top:12px;font-size:13px;font-weight:bold;">
+                    <span aria-hidden="true">📍</span> No location selected yet. Click on the map above.
+                </div>
+
+                <button
+                        type="button"
+                        class="btn secondary"
+                        style="margin-top:10px;"
+                        onclick="clearBinLocationPick()">
+                    <span aria-hidden="true">✖</span> Clear Selected Location
+                </button>
+
+            </div>
+
+            <form id="binForm" aria-labelledby="addBinHeading">
+
+                <input type="hidden" id="binLocation">
+                <input type="hidden" id="binLatitude">
+                <input type="hidden" id="binLongitude">
 
                 <div class="form-grid">
 
                     <div class="form-group">
 
-                        <label>
-                            Location
-                        </label>
-
-                        <input
-                                id="binLocation"
-                                required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Latitude
-                        </label>
-
-                        <input
-                                id="binLatitude"
-                                type="number"
-                                step="any"
-                                required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
-                            Longitude
-                        </label>
-
-                        <input
-                                id="binLongitude"
-                                type="number"
-                                step="any"
-                                required>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label>
+                        <label for="binCapacity">
                             Capacity
                         </label>
 
                         <input
                                 id="binCapacity"
                                 type="number"
+                                aria-required="true"
                                 required>
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
+                        <label for="binFillLevel">
                             Fill Level %
                         </label>
 
@@ -1538,13 +1839,14 @@
                                 type="number"
                                 min="0"
                                 max="100"
+                                aria-required="true"
                                 required>
 
                     </div>
 
                     <div class="form-group">
 
-                        <label>
+                        <label for="binStatus">
                             Status
                         </label>
 
@@ -1571,10 +1873,65 @@
                 <br>
 
                 <button class="btn">
-                    ➕ Add Waste Bin
+                    <span aria-hidden="true">➕</span> Add Waste Bin
                 </button>
 
             </form>
+
+        </div>
+
+        <!-- =========================
+             AUTOMATIC VEHICLE
+             ASSIGNMENT
+        ========================= -->
+
+        <div class="panel">
+
+            <div class="auto-assign-panel">
+
+                <h3 id="autoAssignHeading">
+                    <span aria-hidden="true">🚛</span> Automatic Vehicle Assignment
+                </h3>
+
+                <p>
+                    Enter a Bin ID and automatically assign the nearest
+                    available waste collection vehicle to it, based on live GPS distance.
+                </p>
+
+                <div class="auto-assign-controls">
+
+                    <div>
+
+                        <label for="autoBinId">
+                            Bin ID
+                        </label>
+
+                        <input
+                                id="autoBinId"
+                                type="number"
+                                placeholder="Enter Bin ID">
+
+                    </div>
+
+                    <button
+                            class="btn auto-assign"
+                            onclick="autoAssign()">
+                        <span aria-hidden="true">🎯</span> Assign Nearest Vehicle
+                    </button>
+
+                </div>
+
+                <button
+                        type="button"
+                        class="btn auto-assign"
+                        style="margin-top:12px;"
+                        onclick="autoAssignAll()">
+                    <span aria-hidden="true">🧭</span> Auto-Assign Nearest Vehicle to All Unassigned Bins
+                </button>
+
+                <p id="autoResult" role="status" aria-live="polite"></p>
+
+            </div>
 
         </div>
 
@@ -1586,7 +1943,8 @@
 
     <section
             id="vehicles"
-            class="page">
+            class="page"
+            aria-label="Vehicles">
 
         <div class="panel">
 
@@ -1594,8 +1952,8 @@
 
                 <div>
 
-                    <h2>
-                        🚛 Waste Collection Vehicles
+                    <h2 id="vehiclesHeading">
+                        <span aria-hidden="true">🚛</span> Waste Collection Vehicles
                     </h2>
 
                     <p>
@@ -1607,20 +1965,24 @@
                 <button
                         class="btn"
                         onclick="loadVehicles()">
-                    🔄 Refresh
+                    <span aria-hidden="true">🔄</span> Refresh
                 </button>
 
             </div>
 
+            <label for="vehicleSearch" class="visually-hidden">Search vehicles by number</label>
             <input
                     class="search"
                     id="vehicleSearch"
-                    placeholder="🔎 Search vehicle..."
+                    type="search"
+                    placeholder="Search vehicle..."
                     oninput="displayVehicles()">
 
             <div
                     class="vehicle-grid"
-                    id="vehiclesContainer">
+                    id="vehiclesContainer"
+                    role="list"
+                    aria-labelledby="vehiclesHeading">
 
                 Loading...
 
@@ -1634,8 +1996,8 @@
 
             <div class="gps-panel">
 
-                <h3>
-                    📱 Driver GPS Tracking
+                <h3 id="gpsHeading">
+                    <span aria-hidden="true">📱</span> Driver GPS Tracking
                 </h3>
 
                 <p>
@@ -1647,7 +2009,7 @@
 
                     <div>
 
-                        <label>
+                        <label for="gpsVehicleSelect">
                             Select Vehicle
                         </label>
 
@@ -1664,18 +2026,18 @@
                     <button
                             class="btn gps"
                             onclick="startVehicleGPS()">
-                        📍 Start GPS
+                        <span aria-hidden="true">📍</span> Start GPS
                     </button>
 
                     <button
                             class="btn danger"
                             onclick="stopVehicleGPS()">
-                        ⛔ Stop GPS
+                        <span aria-hidden="true">⛔</span> Stop GPS
                     </button>
 
                 </div>
 
-                <div id="gpsStatus">
+                <div id="gpsStatus" role="status" aria-live="polite">
                     GPS not started.
                 </div>
 
@@ -1691,7 +2053,8 @@
 
     <section
             id="tracking"
-            class="page">
+            class="page"
+            aria-label="Live Tracking">
 
         <div class="panel">
 
@@ -1700,7 +2063,7 @@
                 <div>
 
                     <h2>
-                        📍 Live Vehicle Tracking
+                        <span aria-hidden="true">📍</span> Live Vehicle Tracking
                     </h2>
 
                     <p>
@@ -1711,9 +2074,9 @@
 
                 <div class="live-status">
 
-                    <span class="live-dot"></span>
+                    <span class="live-dot" aria-hidden="true"></span>
 
-                    GPS LIVE
+                    <span>GPS LIVE</span>
 
                 </div>
 
@@ -1721,8 +2084,10 @@
 
             <div
                     id="selectedVehicleInfo"
-                    class="tracking-selected">
-                🚛 No vehicle selected. Go to Vehicles and click Track Vehicle.
+                    class="tracking-selected"
+                    role="status"
+                    aria-live="polite">
+                <span aria-hidden="true">🚛</span> No vehicle selected. Go to Vehicles and click Track Vehicle.
             </div>
 
             <div
@@ -1732,11 +2097,11 @@
 
                 <div class="tracking-info-card">
 
-                    <small>
+                    <small id="trackVehicleNumberLabel">
                         VEHICLE
                     </small>
 
-                    <strong id="trackVehicleNumber">
+                    <strong id="trackVehicleNumber" aria-labelledby="trackVehicleNumberLabel">
                         -
                     </strong>
 
@@ -1744,11 +2109,11 @@
 
                 <div class="tracking-info-card">
 
-                    <small>
+                    <small id="trackDriverLabel">
                         DRIVER
                     </small>
 
-                    <strong id="trackDriver">
+                    <strong id="trackDriver" aria-labelledby="trackDriverLabel">
                         -
                     </strong>
 
@@ -1756,11 +2121,11 @@
 
                 <div class="tracking-info-card">
 
-                    <small>
+                    <small id="trackLatitudeLabel">
                         LATITUDE
                     </small>
 
-                    <strong id="trackLatitude">
+                    <strong id="trackLatitude" aria-labelledby="trackLatitudeLabel">
                         -
                     </strong>
 
@@ -1768,11 +2133,11 @@
 
                 <div class="tracking-info-card">
 
-                    <small>
+                    <small id="trackLongitudeLabel">
                         LONGITUDE
                     </small>
 
-                    <strong id="trackLongitude">
+                    <strong id="trackLongitude" aria-labelledby="trackLongitudeLabel">
                         -
                     </strong>
 
@@ -1780,7 +2145,7 @@
 
             </div>
 
-            <div id="trackingMap"></div>
+            <div id="trackingMap" role="application" aria-label="Map showing the live location of the selected vehicle"></div>
 
             <br>
 
@@ -1789,7 +2154,7 @@
                     class="btn stop-track"
                     onclick="stopLiveTracking()"
                     style="display:none;">
-                ⛔ Stop Vehicle Tracking
+                <span aria-hidden="true">⛔</span> Stop Vehicle Tracking
             </button>
 
         </div>
@@ -1802,17 +2167,18 @@
 
     <section
             id="locations"
-            class="page">
+            class="page"
+            aria-label="Locations">
 
         <div class="panel">
 
-            <h2>
-                📌 Waste Bin Locations
+            <h2 id="locationsHeading">
+                <span aria-hidden="true">📌</span> Waste Bin Locations
             </h2>
 
             <br>
 
-            <div id="locationsContainer">
+            <div id="locationsContainer" role="list" aria-labelledby="locationsHeading">
                 Loading...
             </div>
 
@@ -1826,12 +2192,13 @@
 
     <section
             id="reports"
-            class="page">
+            class="page"
+            aria-label="Reports">
 
         <div class="panel">
 
             <h2>
-                📈 Reports
+                <span aria-hidden="true">📈</span> Reports
             </h2>
 
             <br>
@@ -1840,13 +2207,14 @@
 
                 <div class="card">
 
-                    <div class="stat-title">
+                    <div class="stat-title" id="reportBinsLabel">
                         Total Bins
                     </div>
 
                     <div
                             class="stat-number"
-                            id="reportBins">
+                            id="reportBins"
+                            aria-labelledby="reportBinsLabel">
                         0
                     </div>
 
@@ -1854,13 +2222,14 @@
 
                 <div class="card">
 
-                    <div class="stat-title">
+                    <div class="stat-title" id="reportNormalLabel">
                         Normal Bins
                     </div>
 
                     <div
                             class="stat-number"
-                            id="reportNormal">
+                            id="reportNormal"
+                            aria-labelledby="reportNormalLabel">
                         0
                     </div>
 
@@ -1868,13 +2237,14 @@
 
                 <div class="card">
 
-                    <div class="stat-title">
+                    <div class="stat-title" id="reportCriticalLabel">
                         Critical Bins
                     </div>
 
                     <div
                             class="stat-number"
-                            id="reportCritical">
+                            id="reportCritical"
+                            aria-labelledby="reportCriticalLabel">
                         0
                     </div>
 
@@ -1882,13 +2252,14 @@
 
                 <div class="card">
 
-                    <div class="stat-title">
+                    <div class="stat-title" id="reportVehiclesLabel">
                         Collecting Vehicles
                     </div>
 
                     <div
                             class="stat-number"
-                            id="reportVehicles">
+                            id="reportVehicles"
+                            aria-labelledby="reportVehiclesLabel">
                         0
                     </div>
 
@@ -1906,12 +2277,13 @@
 
     <section
             id="settings"
-            class="page">
+            class="page"
+            aria-label="Settings">
 
         <div class="panel">
 
             <h2>
-                ⚙️ Settings
+                <span aria-hidden="true">⚙️</span> Settings
             </h2>
 
             <br>
@@ -1921,7 +2293,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        📍 Tracking Settings
+                        <span aria-hidden="true">📍</span> Tracking Settings
                     </h3>
 
                     <p>
@@ -1930,7 +2302,7 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <span id="trackingEnabledLabel">
                             Enable live tracking
                         </span>
 
@@ -1940,9 +2312,10 @@
                                     type="checkbox"
                                     id="trackingEnabled"
                                     checked
+                                    aria-labelledby="trackingEnabledLabel"
                                     onchange="saveSettings()">
 
-                            <span class="slider"></span>
+                            <span class="slider" aria-hidden="true"></span>
 
                         </label>
 
@@ -1950,7 +2323,7 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <span id="collectingOnlyLabel">
                             Show only collecting vehicles
                         </span>
 
@@ -1960,9 +2333,10 @@
                                     type="checkbox"
                                     id="collectingOnly"
                                     checked
+                                    aria-labelledby="collectingOnlyLabel"
                                     onchange="saveSettings()">
 
-                            <span class="slider"></span>
+                            <span class="slider" aria-hidden="true"></span>
 
                         </label>
 
@@ -1970,7 +2344,7 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <span id="autoRefreshLabel">
                             Automatic location refresh
                         </span>
 
@@ -1980,9 +2354,10 @@
                                     type="checkbox"
                                     id="autoRefresh"
                                     checked
+                                    aria-labelledby="autoRefreshLabel"
                                     onchange="saveSettings()">
 
-                            <span class="slider"></span>
+                            <span class="slider" aria-hidden="true"></span>
 
                         </label>
 
@@ -1993,7 +2368,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        🗺️ Map Settings
+                        <span aria-hidden="true">🗺️</span> Map Settings
                     </h3>
 
                     <p>
@@ -2002,9 +2377,9 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <label for="mapType">
                             Map Type
-                        </span>
+                        </label>
 
                         <select
                                 id="mapType"
@@ -2032,9 +2407,9 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <label for="mapZoom">
                             Map Zoom
-                        </span>
+                        </label>
 
                         <select
                                 id="mapZoom"
@@ -2073,7 +2448,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        🔄 Refresh Settings
+                        <span aria-hidden="true">🔄</span> Refresh Settings
                     </h3>
 
                     <p>
@@ -2082,9 +2457,9 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <label for="refreshInterval">
                             Tracking interval
-                        </span>
+                        </label>
 
                         <select
                                 id="refreshInterval"
@@ -2119,7 +2494,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        ♿ Accessibility
+                        <span aria-hidden="true">♿</span> Accessibility
                     </h3>
 
                     <p>
@@ -2128,20 +2503,34 @@
 
                     <div class="accessibility-box">
 
-                        <button onclick="increaseFont()">
+                        <button
+                                id="increaseFontBtn"
+                                type="button"
+                                onclick="increaseFont()">
                             A+ Larger Text
                         </button>
 
-                        <button onclick="decreaseFont()">
+                        <button
+                                id="decreaseFontBtn"
+                                type="button"
+                                onclick="decreaseFont()">
                             A- Smaller Text
                         </button>
 
-                        <button onclick="toggleDarkMode()">
-                            🌙 Dark Mode
+                        <button
+                                id="darkModeBtn"
+                                type="button"
+                                aria-pressed="false"
+                                onclick="toggleDarkMode()">
+                            <span aria-hidden="true">🌙</span> Dark Mode
                         </button>
 
-                        <button onclick="toggleContrast()">
-                            ◐ High Contrast
+                        <button
+                                id="highContrastBtn"
+                                type="button"
+                                aria-pressed="false"
+                                onclick="toggleContrast()">
+                            <span aria-hidden="true">◐</span> High Contrast
                         </button>
 
                     </div>
@@ -2151,7 +2540,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        🔔 Notifications
+                        <span aria-hidden="true">🔔</span> Notifications
                     </h3>
 
                     <p>
@@ -2160,7 +2549,7 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <span id="notificationsLabel">
                             Enable notifications
                         </span>
 
@@ -2170,9 +2559,10 @@
                                     type="checkbox"
                                     id="notifications"
                                     checked
+                                    aria-labelledby="notificationsLabel"
                                     onchange="saveSettings()">
 
-                            <span class="slider"></span>
+                            <span class="slider" aria-hidden="true"></span>
 
                         </label>
 
@@ -2180,7 +2570,7 @@
 
                     <div class="setting-row">
 
-                        <span>
+                        <span id="criticalAlertsLabel">
                             Critical bin alerts
                         </span>
 
@@ -2190,9 +2580,10 @@
                                     type="checkbox"
                                     id="criticalAlerts"
                                     checked
+                                    aria-labelledby="criticalAlertsLabel"
                                     onchange="saveSettings()">
 
-                            <span class="slider"></span>
+                            <span class="slider" aria-hidden="true"></span>
 
                         </label>
 
@@ -2203,7 +2594,7 @@
                 <div class="setting-card">
 
                     <h3>
-                        🖥️ System
+                        <span aria-hidden="true">🖥️</span> System
                     </h3>
 
                     <p>
@@ -2226,6 +2617,48 @@
 
 </main>
 
+<!-- =========================
+     ASSIGN VEHICLE MODAL
+========================= -->
+
+<div
+        id="assignModalOverlay"
+        class="modal-overlay"
+        onclick="handleAssignOverlayClick(event)">
+
+    <div
+            class="modal-box"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="assignModalTitle"
+            aria-describedby="assignModalBinInfo">
+
+        <h3 id="assignModalTitle">
+            <span aria-hidden="true">🚛</span> Assign Vehicle to Bin
+        </h3>
+
+        <p id="assignModalBinInfo">
+            Choose a waste collection vehicle to send to this bin.
+        </p>
+
+        <div id="assignVehicleList"></div>
+
+        <div class="modal-close-row">
+
+            <button
+                    type="button"
+                    class="btn secondary"
+                    id="assignModalCloseBtn"
+                    onclick="closeAssignModal()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
 
     /* =====================================
@@ -2245,6 +2678,8 @@
 
     let map = null;
     let trackingMap = null;
+    let addBinMap = null;
+    let addBinMarker = null;
 
     let vehicleMarkers = [];
     let trackingMarkers = [];
@@ -2256,11 +2691,31 @@
     let gpsVehicleId = null;
 
     /*
-        NEW:
         This stores the vehicle selected
         from the Vehicles page.
     */
     let selectedTrackingVehicleId = null;
+
+    /*
+        Bin the "Assign Vehicle" modal is
+        currently open for.
+    */
+    let currentAssignBinId = null;
+
+    /*
+        Route visuals drawn on the tracking
+        map between a vehicle and its
+        assigned bin.
+    */
+    let assignmentPolyline = null;
+    let assignmentBinMarker = null;
+
+    /*
+        Accessibility: remembers which element
+        had focus before a modal/dropdown was
+        opened, so focus can be restored on close.
+    */
+    let lastFocusedElement = null;
 
 
     /* =====================================
@@ -2282,6 +2737,902 @@
 
 
     /* =====================================
+       VEHICLE ↔ BIN ASSIGNMENTS
+
+       Stored client-side (localStorage) as
+       { [binId]: vehicleId }. There's no
+       assignment endpoint on the Spring Boot
+       API yet, so this keeps the assignment
+       local to the browser. Swap these helpers
+       for real API calls once a backend
+       endpoint exists.
+    ===================================== */
+
+    function getAssignments() {
+
+        const saved =
+            localStorage.getItem(
+                "smartWasteAssignments"
+            );
+
+        return saved ? JSON.parse(saved) : {};
+
+    }
+
+
+    function saveAssignments(assignments) {
+
+        localStorage.setItem(
+            "smartWasteAssignments",
+            JSON.stringify(assignments)
+        );
+
+    }
+
+
+    function getAssignedVehicleForBin(binId) {
+
+        const assignments =
+            getAssignments();
+
+        const vehicleId =
+            assignments[binId];
+
+        return vehicleId === undefined ?
+            null :
+            Number(vehicleId);
+
+    }
+
+
+    function getAssignedBinForVehicle(vehicleId) {
+
+        const assignments =
+            getAssignments();
+
+        for (const binId in assignments) {
+
+            if (
+                Number(assignments[binId]) ===
+                Number(vehicleId)
+            ) {
+
+                return Number(binId);
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+
+    function getFocusableElements(container) {
+
+        return Array.from(
+
+            container.querySelectorAll(
+
+                'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+            )
+
+        ).filter(el =>
+
+            el.offsetParent !== null
+
+        );
+
+    }
+
+
+    function trapFocusInModal(event) {
+
+        if (event.key !== "Tab") {
+
+            return;
+
+        }
+
+
+        const modal =
+            document.querySelector(
+                "#assignModalOverlay .modal-box"
+            );
+
+
+        const focusable =
+            getFocusableElements(modal);
+
+
+        if (!focusable.length) {
+
+            return;
+
+        }
+
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+
+        if (event.shiftKey && document.activeElement === first) {
+
+            event.preventDefault();
+
+            last.focus();
+
+        } else if (!event.shiftKey && document.activeElement === last) {
+
+            event.preventDefault();
+
+            first.focus();
+
+        }
+
+    }
+
+
+    function handleModalKeydown(event) {
+
+        if (event.key === "Escape") {
+
+            closeAssignModal();
+
+            return;
+
+        }
+
+
+        trapFocusInModal(event);
+
+    }
+
+
+    function openAssignModal(binId) {
+
+        currentAssignBinId =
+            Number(binId);
+
+
+        lastFocusedElement =
+            document.activeElement;
+
+
+        const bin =
+            bins.find(
+                b =>
+                    Number(b.binId) ===
+                    Number(binId)
+            );
+
+
+        document.getElementById(
+            "assignModalBinInfo"
+        ).textContent =
+            bin ?
+                `Choose a vehicle to send to Bin #${bin.binId} (${bin.location ?? "-"}).` :
+                "Choose a waste collection vehicle to send to this bin.";
+
+
+        populateAssignVehicleList();
+
+
+        document.getElementById(
+            "assignModalOverlay"
+        ).classList.add("open");
+
+
+        document.addEventListener(
+            "keydown",
+            handleModalKeydown
+        );
+
+
+        const modal =
+            document.querySelector(
+                "#assignModalOverlay .modal-box"
+            );
+
+        const focusable =
+            getFocusableElements(modal);
+
+        if (focusable.length) {
+
+            focusable[0].focus();
+
+        } else {
+
+            modal.focus();
+
+        }
+
+    }
+
+
+    function closeAssignModal() {
+
+        document.getElementById(
+            "assignModalOverlay"
+        ).classList.remove("open");
+
+        document.removeEventListener(
+            "keydown",
+            handleModalKeydown
+        );
+
+        currentAssignBinId = null;
+
+
+        if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+
+            lastFocusedElement.focus();
+
+        }
+
+        lastFocusedElement = null;
+
+    }
+
+
+    function handleAssignOverlayClick(event) {
+
+        if (event.target.id === "assignModalOverlay") {
+
+            closeAssignModal();
+
+        }
+
+    }
+
+
+    function populateAssignVehicleList() {
+
+        const list =
+            document.getElementById(
+                "assignVehicleList"
+            );
+
+
+        list.innerHTML = "";
+
+
+        const availableVehicles =
+            vehicles.filter(vehicle =>
+                vehicle.vehicleType ===
+                "WASTE_COLLECTION"
+            );
+
+
+        if (!availableVehicles.length) {
+
+            list.innerHTML =
+                "<p>No waste collection vehicles available.</p>";
+
+            return;
+
+        }
+
+
+        availableVehicles.forEach(vehicle => {
+
+            const assignedBinId =
+                getAssignedBinForVehicle(
+                    vehicle.vehicleId
+                );
+
+
+            const row =
+                document.createElement("div");
+
+
+            row.className =
+                "assign-vehicle-option";
+
+
+            row.innerHTML = `
+
+            <div class="avo-info">
+
+                <strong>
+                    <span aria-hidden="true">🚛</span> ${vehicle.vehicleNumber ?? "-"}
+                </strong>
+
+                <small>
+                    Driver: ${vehicle.driver ?? "Not assigned"}
+                    &nbsp;•&nbsp;
+                    Status: ${vehicle.status ?? "-"}
+                </small>
+
+                ${assignedBinId !== null ? `
+                <small>
+                    <span aria-hidden="true">⚠</span> Currently heading to Bin #${assignedBinId}
+                </small>
+                ` : ""}
+
+            </div>
+
+            <button
+                type="button"
+                class="btn assign"
+                onclick="confirmAssignVehicle(${vehicle.vehicleId})">
+                Select
+                <span class="visually-hidden">${vehicle.vehicleNumber ?? ""}</span>
+            </button>
+
+        `;
+
+
+            list.appendChild(row);
+
+        });
+
+    }
+
+
+    function confirmAssignVehicle(vehicleId) {
+
+        if (currentAssignBinId === null) {
+
+            return;
+
+        }
+
+
+        const assignments =
+            getAssignments();
+
+
+        /*
+            A vehicle can only head to one bin
+            at a time, so clear any prior
+            assignment it had.
+        */
+
+        for (const binId in assignments) {
+
+            if (
+                Number(assignments[binId]) ===
+                Number(vehicleId)
+            ) {
+
+                delete assignments[binId];
+
+            }
+
+        }
+
+
+        assignments[currentAssignBinId] =
+            Number(vehicleId);
+
+
+        saveAssignments(assignments);
+
+
+        const bin =
+            bins.find(
+                b =>
+                    Number(b.binId) ===
+                    Number(currentAssignBinId)
+            );
+
+
+        const vehicle =
+            vehicles.find(
+                v =>
+                    Number(v.vehicleId) ===
+                    Number(vehicleId)
+            );
+
+
+        closeAssignModal();
+
+        displayBins();
+
+        displayVehicles();
+
+        updateTrackingMarkers();
+
+
+        showMessage(
+
+            (vehicle ? vehicle.vehicleNumber : "Vehicle") +
+            " assigned to Bin #" +
+            (bin ? bin.binId : currentAssignBinId) +
+            "."
+
+        );
+
+    }
+
+
+    function unassignBin(binId) {
+
+        const assignments =
+            getAssignments();
+
+        delete assignments[binId];
+
+        saveAssignments(assignments);
+
+
+        displayBins();
+
+        displayVehicles();
+
+        updateTrackingMarkers();
+
+
+        showMessage(
+            "Vehicle unassigned from bin."
+        );
+
+    }
+
+
+    /* =====================================
+       DISTANCE HELPER (Haversine)
+
+       Returns the great-circle distance, in
+       kilometers, between two lat/lng points.
+       Used to find the nearest vehicle to a
+       bin (and vice versa) purely client-side,
+       using the GPS coordinates already loaded
+       in `bins` and `vehicles`.
+    ===================================== */
+
+    function haversineDistanceKm(lat1, lon1, lat2, lon2) {
+
+        const toRad = deg => (deg * Math.PI) / 180;
+
+        const R = 6371;
+
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) *
+            Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        const c =
+            2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+
+    }
+
+
+    /*
+        Finds the closest AVAILABLE waste
+        collection vehicle (with a GPS fix) to
+        a given bin, skipping any vehicle that
+        is already assigned (per the assignments
+        map passed in, so callers can track
+        provisional assignments across a loop
+        without re-reading localStorage each time).
+    */
+
+    function findNearestAvailableVehicle(bin, assignments) {
+
+        if (bin.latitude == null || bin.longitude == null) {
+
+            return null;
+
+        }
+
+        const assignmentsMap =
+            assignments || getAssignments();
+
+        const assignedVehicleIds =
+            Object.values(assignmentsMap).map(Number);
+
+        let nearestVehicle = null;
+        let nearestDistance = Infinity;
+
+        vehicles.forEach(vehicle => {
+
+            if (vehicle.vehicleType !== "WASTE_COLLECTION") {
+                return;
+            }
+
+            if (vehicle.status !== "AVAILABLE") {
+                return;
+            }
+
+            if (vehicle.latitude == null || vehicle.longitude == null) {
+                return;
+            }
+
+            if (assignedVehicleIds.includes(Number(vehicle.vehicleId))) {
+                return;
+            }
+
+            const distance =
+                haversineDistanceKm(
+
+                    Number(bin.latitude),
+                    Number(bin.longitude),
+
+                    Number(vehicle.latitude),
+                    Number(vehicle.longitude)
+
+                );
+
+            if (distance < nearestDistance) {
+
+                nearestDistance = distance;
+                nearestVehicle = vehicle;
+
+            }
+
+        });
+
+        return nearestVehicle ?
+            { vehicle: nearestVehicle, distance: nearestDistance } :
+            null;
+
+    }
+
+
+    /* =====================================
+       AUTOMATIC VEHICLE ASSIGNMENT
+       (single bin)
+
+       Fully client-side: looks up the bin,
+       finds the nearest AVAILABLE waste
+       collection vehicle by GPS distance, and
+       stores the assignment locally. No backend
+       assignment endpoint required.
+    ===================================== */
+
+    function autoAssign() {
+
+        const binIdInput =
+            document.getElementById("autoBinId");
+
+        const result =
+            document.getElementById("autoResult");
+
+
+        const binId =
+            binIdInput.value;
+
+
+        if (!binId) {
+
+            result.textContent =
+                "Please enter Bin ID";
+
+            binIdInput.focus();
+
+            return;
+
+        }
+
+
+        const bin =
+            bins.find(
+                b =>
+                    Number(b.binId) ===
+                    Number(binId)
+            );
+
+
+        if (!bin) {
+
+            result.textContent =
+                "Bin #" + binId + " was not found.";
+
+            return;
+
+        }
+
+
+        if (bin.latitude == null || bin.longitude == null) {
+
+            result.textContent =
+                "This bin doesn't have a GPS location yet.";
+
+            return;
+
+        }
+
+
+        const match =
+            findNearestAvailableVehicle(
+                bin,
+                getAssignments()
+            );
+
+
+        if (!match) {
+
+            result.textContent =
+                "No available vehicle with a GPS location was found.";
+
+            return;
+
+        }
+
+
+        const assignments =
+            getAssignments();
+
+        assignments[Number(bin.binId)] =
+            Number(match.vehicle.vehicleId);
+
+        saveAssignments(assignments);
+
+
+        binIdInput.value = "";
+
+
+        result.textContent =
+            "Assigned " +
+            match.vehicle.vehicleNumber +
+            " to Bin #" +
+            bin.binId +
+            " (" +
+            match.distance.toFixed(2) +
+            " km away).";
+
+
+        displayBins();
+
+        displayVehicles();
+
+        updateTrackingMarkers();
+
+    }
+
+
+    /* =====================================
+       AUTOMATIC VEHICLE ASSIGNMENT
+       (all unassigned bins)
+
+       Goes through every bin that doesn't
+       already have a vehicle heading to it,
+       prioritizing CRITICAL bins over WARNING
+       ones, and assigns each the closest still
+       -available vehicle. Assignments made
+       earlier in the loop are taken into
+       account so no vehicle is sent to two
+       bins at once.
+    ===================================== */
+
+    function autoAssignAll() {
+
+        const result =
+            document.getElementById("autoResult");
+
+
+        const candidateBins =
+            bins
+                .filter(bin =>
+                    getAssignedVehicleForBin(bin.binId) === null
+                )
+                .filter(bin =>
+                    bin.latitude != null &&
+                    bin.longitude != null
+                )
+                .filter(bin =>
+                    bin.status === "CRITICAL" ||
+                    bin.status === "WARNING"
+                )
+                .sort((a, b) => {
+
+                    const rank = { CRITICAL: 0, WARNING: 1 };
+
+                    return rank[a.status] - rank[b.status];
+
+                });
+
+
+        if (!candidateBins.length) {
+
+            result.textContent =
+                "No unassigned critical or warning bins need a vehicle right now.";
+
+            return;
+
+        }
+
+
+        const assignments =
+            getAssignments();
+
+        const summary = [];
+
+
+        candidateBins.forEach(bin => {
+
+            const match =
+                findNearestAvailableVehicle(
+                    bin,
+                    assignments
+                );
+
+
+            if (!match) {
+
+                return;
+
+            }
+
+
+            assignments[Number(bin.binId)] =
+                Number(match.vehicle.vehicleId);
+
+
+            summary.push(
+
+                match.vehicle.vehicleNumber +
+                " → Bin #" +
+                bin.binId +
+                " (" +
+                match.distance.toFixed(2) +
+                " km)"
+
+            );
+
+        });
+
+
+        saveAssignments(assignments);
+
+
+        result.textContent =
+            summary.length ?
+                "Assigned " + summary.length + " vehicle(s): " + summary.join(", ") :
+                "No available vehicles with GPS locations were found.";
+
+
+        displayBins();
+
+        displayVehicles();
+
+        updateTrackingMarkers();
+
+    }
+
+
+    function updateAssignmentRoute() {
+
+        if (
+            !trackingMap ||
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        if (assignmentPolyline) {
+
+            assignmentPolyline.setMap(null);
+
+            assignmentPolyline = null;
+
+        }
+
+
+        if (assignmentBinMarker) {
+
+            assignmentBinMarker.setMap(null);
+
+            assignmentBinMarker = null;
+
+        }
+
+
+        if (selectedTrackingVehicleId === null) {
+
+            return;
+
+        }
+
+
+        const assignedBinId =
+            getAssignedBinForVehicle(
+                selectedTrackingVehicleId
+            );
+
+
+        if (assignedBinId === null) {
+
+            return;
+
+        }
+
+
+        const vehicle =
+            vehicles.find(
+                v =>
+                    Number(v.vehicleId) ===
+                    Number(selectedTrackingVehicleId)
+            );
+
+
+        const bin =
+            bins.find(
+                b =>
+                    Number(b.binId) ===
+                    Number(assignedBinId)
+            );
+
+
+        if (
+            !vehicle ||
+            !bin ||
+            vehicle.latitude == null ||
+            bin.latitude == null
+        ) {
+
+            return;
+
+        }
+
+
+        const vehiclePos = {
+
+            lat: Number(vehicle.latitude),
+            lng: Number(vehicle.longitude)
+
+        };
+
+
+        const binPos = {
+
+            lat: Number(bin.latitude),
+            lng: Number(bin.longitude)
+
+        };
+
+
+        assignmentBinMarker =
+            new google.maps.Marker({
+
+                position: binPos,
+
+                map: trackingMap,
+
+                title: "Bin #" + bin.binId,
+
+                label: {
+
+                    text: "🗑️",
+
+                    fontSize: "20px"
+
+                }
+
+            });
+
+
+        assignmentPolyline =
+            new google.maps.Polyline({
+
+                path: [vehiclePos, binPos],
+
+                strokeColor: "#1976d2",
+
+                strokeOpacity: 0.8,
+
+                strokeWeight: 3,
+
+                map: trackingMap
+
+            });
+
+    }
+
+
+    /* =====================================
        AUTH
     ===================================== */
 
@@ -2292,6 +3643,8 @@
 
         clearAuthMessage();
 
+        document.getElementById("signupName").focus();
+
     }
 
 
@@ -2301,6 +3654,8 @@
         document.getElementById("loginBox").style.display = "block";
 
         clearAuthMessage();
+
+        document.getElementById("loginEmail").focus();
 
     }
 
@@ -2315,12 +3670,12 @@
         if (success) {
 
             box.style.background = "#d9f2df";
-            box.style.color = "#17642b";
+            box.style.color = "#0f4d1e";
 
         } else {
 
             box.style.background = "#ffe0e0";
-            box.style.color = "#b00020";
+            box.style.color = "#8c001a";
 
         }
 
@@ -2506,6 +3861,11 @@
             applyUserToTopbar(user);
 
 
+            document.getElementById(
+                "mainContent"
+            ).focus();
+
+
             showMessage(
                 "Login successful. Welcome " +
                 user.name +
@@ -2532,7 +3892,7 @@
         stopVehicleGPS();
         stopLiveTracking();
 
-        closeProfileDropdown();
+        closeProfileDropdown(false);
 
         localStorage.removeItem(
             "smartWasteLoggedIn"
@@ -2590,7 +3950,7 @@
 
 
     /* =====================================
-       ⭐ NEW - ACCOUNT / PROFILE SETTINGS
+       ACCOUNT / PROFILE SETTINGS
     ===================================== */
 
     function applyUserToTopbar(user) {
@@ -2624,11 +3984,15 @@
 
         if (isOpen) {
 
-            closeProfileDropdown();
+            closeProfileDropdown(true);
 
             return;
 
         }
+
+
+        lastFocusedElement =
+            document.getElementById("adminInfoToggle");
 
 
         const storedUser =
@@ -2658,29 +4022,61 @@
 
         dropdown.classList.add("open");
 
+        document.getElementById("adminInfoToggle").setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
 
         /*
             Close the dropdown when clicking
-            anywhere else on the page.
+            anywhere else on the page, or on Escape.
         */
         document.addEventListener(
             "click",
             handleOutsideProfileClick
         );
 
+        document.addEventListener(
+            "keydown",
+            handleProfileDropdownKeydown
+        );
+
+
+        document.getElementById("profileName").focus();
+
     }
 
 
-    function closeProfileDropdown() {
+    function closeProfileDropdown(restoreFocus) {
 
         document.getElementById(
             "profileDropdown"
         ).classList.remove("open");
 
+        document.getElementById("adminInfoToggle").setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
         document.removeEventListener(
             "click",
             handleOutsideProfileClick
         );
+
+        document.removeEventListener(
+            "keydown",
+            handleProfileDropdownKeydown
+        );
+
+
+        if (restoreFocus && lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+
+            lastFocusedElement.focus();
+
+        }
+
+        lastFocusedElement = null;
 
     }
 
@@ -2699,7 +4095,18 @@
             !toggle.contains(event.target)
         ) {
 
-            closeProfileDropdown();
+            closeProfileDropdown(false);
+
+        }
+
+    }
+
+
+    function handleProfileDropdownKeydown(event) {
+
+        if (event.key === "Escape") {
+
+            closeProfileDropdown(true);
 
         }
 
@@ -2717,12 +4124,12 @@
         if (success) {
 
             box.style.background = "#d9f2df";
-            box.style.color = "#17642b";
+            box.style.color = "#0f4d1e";
 
         } else {
 
             box.style.background = "#ffe0e0";
-            box.style.color = "#b00020";
+            box.style.color = "#8c001a";
 
         }
 
@@ -2875,7 +4282,7 @@
 
         setTimeout(() => {
 
-            closeProfileDropdown();
+            closeProfileDropdown(true);
 
             showMessage("Profile updated successfully.");
 
@@ -3016,13 +4423,21 @@
 
         document
             .querySelectorAll(".menu button")
-            .forEach(b =>
-                b.classList.remove("active")
-            );
+            .forEach(b => {
+
+                b.classList.remove("active");
+
+                b.removeAttribute("aria-current");
+
+            });
 
 
         if (button) {
+
             button.classList.add("active");
+
+            button.setAttribute("aria-current", "page");
+
         }
 
 
@@ -3073,11 +4488,33 @@
             titles[page][1];
 
 
+        /*
+            Move focus to the main heading so
+            screen reader and keyboard users get
+            confirmation that the page changed.
+        */
+
+        document.getElementById("pageTitle").setAttribute("tabindex", "-1");
+
+        document.getElementById("pageTitle").focus();
+
+
         if (page === "tracking") {
 
             setTimeout(() => {
 
                 initTrackingMap();
+
+            }, 300);
+
+        }
+
+
+        if (page === "bins") {
+
+            setTimeout(() => {
+
+                initAddBinMap();
 
             }, 300);
 
@@ -3210,6 +4647,26 @@
             }
 
 
+            /*
+                Figure out if a vehicle
+                is currently assigned to this bin.
+            */
+
+            const assignedVehicleId =
+                getAssignedVehicleForBin(
+                    bin.binId
+                );
+
+
+            const assignedVehicle =
+                assignedVehicleId !== null ?
+                    vehicles.find(v =>
+                        Number(v.vehicleId) ===
+                        Number(assignedVehicleId)
+                    ) :
+                    null;
+
+
             const card =
                 document.createElement("div");
 
@@ -3217,10 +4674,12 @@
             card.className =
                 "bin-card";
 
+            card.setAttribute("role", "listitem");
+
 
             card.innerHTML = `
 
-            <div class="bin-icon">
+            <div class="bin-icon" aria-hidden="true">
                 🗑️
             </div>
 
@@ -3229,7 +4688,7 @@
             </div>
 
             <div class="bin-location">
-                📍 ${bin.location ?? "-"}
+                <span aria-hidden="true">📍</span> ${bin.location ?? "-"}
             </div>
 
             <div class="bin-info">
@@ -3242,7 +4701,13 @@
                 Fill Level: ${fill}%
             </div>
 
-            <div class="progress">
+            <div
+                class="progress"
+                role="progressbar"
+                aria-valuenow="${Math.min(fill,100)}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-label="Bin ${bin.binId ?? ""} fill level ${fill} percent">
 
                 <div
                     class="progress-bar ${progressClass}"
@@ -3259,12 +4724,378 @@
                 Status: ${bin.status ?? "-"}
             </div>
 
+            ${assignedVehicle ? `
+            <div class="assignment-badge">
+                <span aria-hidden="true">🚛</span> Assigned: ${assignedVehicle.vehicleNumber}
+            </div>
+            ` : ""}
+
+            <div class="bin-actions">
+
+                ${assignedVehicle ? `
+                <button
+                    type="button"
+                    class="btn unassign"
+                    onclick="unassignBin(${bin.binId})">
+                    <span aria-hidden="true">✖</span> Unassign Vehicle
+                </button>
+                ` : `
+                <button
+                    type="button"
+                    class="btn assign"
+                    onclick="openAssignModal(${bin.binId})">
+                    <span aria-hidden="true">🚛</span> Assign Vehicle
+                </button>
+                `}
+
+                <button
+                    type="button"
+                    class="btn danger"
+                    onclick="deleteBin(${bin.binId})">
+                    <span aria-hidden="true">🗑️</span> Remove Bin
+                    <span class="visually-hidden">#${bin.binId ?? ""}</span>
+                </button>
+
+            </div>
+
         `;
+
 
 
             container.appendChild(card);
 
         });
+
+    }
+
+
+    /* =====================================
+       REMOVE / DELETE BIN
+    ===================================== */
+
+    async function deleteBin(binId) {
+
+        const bin =
+            bins.find(
+                b =>
+                    Number(b.binId) ===
+                    Number(binId)
+            );
+
+
+        const confirmed =
+            confirm(
+
+                "Remove Bin #" +
+                binId +
+                (bin && bin.location ? " (" + bin.location + ")" : "") +
+                "? This cannot be undone."
+
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+
+                    BIN_API +
+                    "/" +
+                    binId,
+
+                    {
+                        method: "DELETE"
+                    }
+
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to delete bin"
+                );
+
+            }
+
+
+            /*
+                Also clear any vehicle assignment
+                that pointed at this bin, so stale
+                badges/routes don't linger.
+            */
+
+            const assignments =
+                getAssignments();
+
+            delete assignments[binId];
+
+            saveAssignments(assignments);
+
+
+            showMessage(
+                "Bin #" +
+                binId +
+                " removed successfully."
+            );
+
+
+            loadBins();
+
+            loadVehicles();
+
+        }
+
+        catch(error) {
+
+            console.error(error);
+
+            showMessage(
+                "Unable to remove bin."
+            );
+
+        }
+
+    }
+
+
+    /* =====================================
+       ADD BIN MAP (click-to-place)
+
+       Lets the admin place a new bin by
+       clicking directly on a map, instead of
+       typing an address. The marker can also
+       be dragged to fine-tune the spot. Both
+       actions fill the hidden lat/lng/location
+       fields used by the Add Bin form, and the
+       address is looked up automatically via
+       reverse geocoding for display purposes.
+    ===================================== */
+
+    function initAddBinMap() {
+
+        if (typeof google === "undefined") {
+
+            return;
+
+        }
+
+
+        const element =
+            document.getElementById("addBinMap");
+
+
+        if (!element) {
+
+            return;
+
+        }
+
+
+        if (!addBinMap) {
+
+            addBinMap =
+                new google.maps.Map(element, {
+
+                    center: {
+
+                        lat: 13.0827,
+                        lng: 80.2707
+
+                    },
+
+                    zoom: settings.mapZoom,
+
+                    mapTypeId: settings.mapType,
+
+                    mapTypeControl: true,
+
+                    streetViewControl: false,
+
+                    fullscreenControl: true
+
+                });
+
+
+            addBinMap.addListener(
+                "click",
+                function(event) {
+
+                    placeBinMarker(
+                        event.latLng.lat(),
+                        event.latLng.lng()
+                    );
+
+                }
+            );
+
+        }
+
+
+        google.maps.event.trigger(
+            addBinMap,
+            "resize"
+        );
+
+    }
+
+
+    function placeBinMarker(lat, lng) {
+
+        if (!addBinMap) {
+
+            return;
+
+        }
+
+
+        if (addBinMarker) {
+
+            addBinMarker.setPosition({ lat, lng });
+
+        } else {
+
+            addBinMarker =
+                new google.maps.Marker({
+
+                    position: { lat, lng },
+
+                    map: addBinMap,
+
+                    draggable: true,
+
+                    label: {
+
+                        text: "🗑️",
+
+                        fontSize: "20px"
+
+                    }
+
+                });
+
+
+            addBinMarker.addListener(
+                "dragend",
+                function() {
+
+                    const pos =
+                        addBinMarker.getPosition();
+
+                    updateBinLocationFields(
+                        pos.lat(),
+                        pos.lng()
+                    );
+
+                }
+            );
+
+        }
+
+
+        updateBinLocationFields(lat, lng);
+
+    }
+
+
+    function updateBinLocationFields(lat, lng) {
+
+        document.getElementById("binLatitude").value = lat;
+        document.getElementById("binLongitude").value = lng;
+
+
+        const statusBox =
+            document.getElementById("binLocationStatus");
+
+
+        statusBox.innerHTML =
+            '<span aria-hidden="true">📍</span> Selected: ' +
+            lat.toFixed(6) +
+            ", " +
+            lng.toFixed(6) +
+            " (looking up address...)";
+
+
+        if (
+            typeof google === "undefined" ||
+            !google.maps ||
+            !google.maps.Geocoder
+        ) {
+
+            document.getElementById("binLocation").value =
+                lat.toFixed(6) + ", " + lng.toFixed(6);
+
+            return;
+
+        }
+
+
+        const geocoder =
+            new google.maps.Geocoder();
+
+
+        geocoder.geocode(
+
+            { location: { lat, lng } },
+
+            function(results, status) {
+
+                let address =
+                    lat.toFixed(6) + ", " + lng.toFixed(6);
+
+
+                if (
+                    status === "OK" &&
+                    results &&
+                    results.length
+                ) {
+
+                    address =
+                        results[0].formatted_address;
+
+                }
+
+
+                document.getElementById("binLocation").value =
+                    address;
+
+
+                statusBox.innerHTML =
+                    '<span aria-hidden="true">📍</span> Selected: ' +
+                    address;
+
+            }
+
+        );
+
+    }
+
+
+    function clearBinLocationPick() {
+
+        if (addBinMarker) {
+
+            addBinMarker.setMap(null);
+
+            addBinMarker = null;
+
+        }
+
+
+        document.getElementById("binLocation").value = "";
+        document.getElementById("binLatitude").value = "";
+        document.getElementById("binLongitude").value = "";
+
+
+        document.getElementById("binLocationStatus").innerHTML =
+            '<span aria-hidden="true">📍</span> No location selected yet. Click on the map above.';
 
     }
 
@@ -3282,26 +5113,52 @@
                 event.preventDefault();
 
 
+                const form = this;
+
+
+                const latValue =
+                    document.getElementById("binLatitude").value;
+
+                const lngValue =
+                    document.getElementById("binLongitude").value;
+
+                const locationValue =
+                    document.getElementById("binLocation").value;
+
+
+                if (!latValue || !lngValue) {
+
+                    showMessage(
+                        "Please click on the map to select the bin's location."
+                    );
+
+                    document.getElementById("addBinMap").scrollIntoView({
+
+                        behavior: "smooth",
+                        block: "center"
+
+                    });
+
+                    return;
+
+                }
+
+
                 const bin = {
 
                     location:
-                    document.getElementById(
-                        "binLocation"
-                    ).value,
+                        locationValue ||
+                        (
+                            Number(latValue).toFixed(6) +
+                            ", " +
+                            Number(lngValue).toFixed(6)
+                        ),
 
                     latitude:
-                        Number(
-                            document.getElementById(
-                                "binLatitude"
-                            ).value
-                        ),
+                        Number(latValue),
 
                     longitude:
-                        Number(
-                            document.getElementById(
-                                "binLongitude"
-                            ).value
-                        ),
+                        Number(lngValue),
 
                     capacity:
                         Number(
@@ -3355,10 +5212,14 @@
                     }
 
 
-                    this.reset();
+                    form.reset();
+
+                    clearBinLocationPick();
 
                     showMessage(
-                        "Waste bin added successfully."
+                        "Waste bin added at " +
+                        bin.location +
+                        "."
                     );
 
                     loadBins();
@@ -3415,7 +5276,6 @@
             updateTrackingMarkers();
 
             /*
-                NEW:
                 Update selected vehicle information
                 whenever fresh GPS data arrives.
             */
@@ -3522,6 +5382,26 @@
                 vehicle.vehicleId;
 
 
+            /*
+                Figure out if this vehicle
+                has been sent to a bin.
+            */
+
+            const assignedBinId =
+                getAssignedBinForVehicle(
+                    vehicle.vehicleId
+                );
+
+
+            const assignedBin =
+                assignedBinId !== null ?
+                    bins.find(b =>
+                        Number(b.binId) ===
+                        Number(assignedBinId)
+                    ) :
+                    null;
+
+
             const card =
                 document.createElement(
                     "div"
@@ -3532,12 +5412,14 @@
                 "vehicle-card" +
                 (isSelected ? " selected" : "");
 
+            card.setAttribute("role", "listitem");
+
 
             card.innerHTML = `
 
             <div class="vehicle-header">
 
-                <div class="truck">
+                <div class="truck" aria-hidden="true">
                     🚛
                 </div>
 
@@ -3549,25 +5431,26 @@
 
             <div class="vehicle-name">
                 Waste Collection Vehicle
+                ${isSelected ? '<span class="visually-hidden">(currently selected for tracking)</span>' : ""}
             </div>
 
             <div class="vehicle-detail">
-                👤 Driver:
+                Driver:
                 ${vehicle.driver ?? "Not assigned"}
             </div>
 
             <div class="vehicle-detail">
-                📍 Latitude:
+                Latitude:
                 ${vehicle.latitude ?? "-"}
             </div>
 
             <div class="vehicle-detail">
-                📍 Longitude:
+                Longitude:
                 ${vehicle.longitude ?? "-"}
             </div>
 
             <div class="vehicle-detail">
-                🕐 Updated:
+                Updated:
                 ${vehicle.lastUpdated ?? "-"}
             </div>
 
@@ -3575,13 +5458,25 @@
                 ${vehicle.status ?? "UNKNOWN"}
             </span>
 
-            <button
-                class="btn track"
-                onclick="trackVehicle(${vehicle.vehicleId})">
+            ${assignedBin ? `
+            <div class="assignment-badge">
+                <span aria-hidden="true">🗑️</span> Heading to Bin #${assignedBin.binId} (${assignedBin.location ?? "-"})
+            </div>
+            ` : ""}
 
-                📍 Track Vehicle
+            <div class="vehicle-actions-row">
 
-            </button>
+                <button
+                    type="button"
+                    class="btn track"
+                    onclick="trackVehicle(${vehicle.vehicleId})">
+
+                    <span aria-hidden="true">📍</span> Track Vehicle
+                    <span class="visually-hidden">${vehicle.vehicleNumber ?? ""}</span>
+
+                </button>
+
+            </div>
 
         `;
 
@@ -3594,7 +5489,7 @@
 
 
     /* =====================================
-       ⭐ TRACK VEHICLE
+       TRACK VEHICLE
     ===================================== */
 
     function trackVehicle(vehicleId) {
@@ -3676,7 +5571,7 @@
 
 
     /* =====================================
-       ⭐ UPDATE SELECTED VEHICLE
+       UPDATE SELECTED VEHICLE
     ===================================== */
 
     function updateSelectedVehicleInfo() {
@@ -3705,6 +5600,26 @@
         }
 
 
+        /*
+            Show the assigned bin, if any,
+            in the live tracking summary line.
+        */
+
+        const assignedBinId =
+            getAssignedBinForVehicle(
+                vehicle.vehicleId
+            );
+
+
+        const assignedBin =
+            assignedBinId !== null ?
+                bins.find(b =>
+                    Number(b.binId) ===
+                    Number(assignedBinId)
+                ) :
+                null;
+
+
         const info =
             document.getElementById(
                 "selectedVehicleInfo"
@@ -3713,7 +5628,7 @@
 
         info.innerHTML = `
 
-        🟢 LIVE TRACKING:
+        <span aria-hidden="true">🟢</span> LIVE TRACKING:
         <strong>
             ${vehicle.vehicleNumber}
         </strong>
@@ -3731,6 +5646,17 @@
         <strong>
             ${vehicle.lastUpdated ?? "-"}
         </strong>
+
+        ${assignedBin ? `
+
+        &nbsp; | &nbsp;
+
+        Destination:
+        <strong>
+            Bin #${assignedBin.binId} (${assignedBin.location ?? "-"})
+        </strong>
+
+        ` : ""}
 
     `;
 
@@ -3773,7 +5699,7 @@
 
 
     /* =====================================
-       ⭐ FOCUS SELECTED VEHICLE
+       FOCUS SELECTED VEHICLE
     ===================================== */
 
     function focusSelectedVehicle() {
@@ -3925,6 +5851,8 @@
                 "Please select a vehicle first."
             );
 
+            select.focus();
+
             return;
 
         }
@@ -3935,7 +5863,7 @@
             document.getElementById(
                 "gpsStatus"
             ).textContent =
-                "❌ GPS is not supported.";
+                "GPS is not supported.";
 
             return;
 
@@ -3952,7 +5880,7 @@
         document.getElementById(
             "gpsStatus"
         ).textContent =
-            "📍 Starting GPS tracking...";
+            "Starting GPS tracking...";
 
 
         gpsWatchId =
@@ -3971,7 +5899,7 @@
                         "gpsStatus"
                     ).innerHTML =
 
-                        "🟢 GPS ACTIVE<br>" +
+                        "<span aria-hidden=\"true\">🟢</span> GPS ACTIVE<br>" +
 
                         "Latitude: " +
                         latitude +
@@ -4023,7 +5951,7 @@
                     document.getElementById(
                         "gpsStatus"
                     ).textContent =
-                        "❌ " + message;
+                        message;
 
                 },
 
@@ -4345,6 +6273,19 @@
 
         }
 
+
+        if (addBinMap) {
+
+            addBinMap.setZoom(
+                settings.mapZoom
+            );
+
+            addBinMap.setMapTypeId(
+                settings.mapType
+            );
+
+        }
+
     }
 
 
@@ -4443,7 +6384,7 @@
                     <div style="padding:8px">
 
                         <h3>
-                            🚛 Waste Collection
+                            Waste Collection
                         </h3>
 
                         <br>
@@ -4574,7 +6515,7 @@
                     <div style="padding:8px">
 
                         <h3>
-                            🗑️ Waste Bin
+                            Waste Bin
                         </h3>
 
                         <br>
@@ -4623,11 +6564,146 @@
 
         });
 
+
+        /*
+            Automatically re-center and
+            zoom the dashboard map so it always
+            frames the real bin (and vehicle)
+            locations coming from the database,
+            instead of staying stuck on the
+            hardcoded fallback center.
+        */
+
+        fitMapToData();
+
     }
 
 
     /* =====================================
-       ⭐ LIVE TRACKING MARKERS
+       AUTO-FIT MAP TO REAL DATA
+
+       Builds a Google Maps LatLngBounds from
+       every bin/vehicle that has a real
+       latitude/longitude, then fits the
+       dashboard map to that bounds so the
+       markers are always visible at their
+       actual coordinates - no more relying
+       on the fixed Chennai fallback center.
+    ===================================== */
+
+    function fitMapToData() {
+
+        if (
+            !map ||
+            typeof google === "undefined"
+        ) {
+
+            return;
+
+        }
+
+
+        const bounds =
+            new google.maps.LatLngBounds();
+
+
+        let pointCount = 0;
+
+
+        bins.forEach(bin => {
+
+            if (
+                bin.latitude == null ||
+                bin.longitude == null
+            ) {
+
+                return;
+
+            }
+
+
+            bounds.extend({
+
+                lat: Number(bin.latitude),
+                lng: Number(bin.longitude)
+
+            });
+
+
+            pointCount++;
+
+        });
+
+
+        vehicles
+            .filter(vehicle =>
+                vehicle.vehicleType ===
+                "WASTE_COLLECTION"
+            )
+            .forEach(vehicle => {
+
+                if (
+                    vehicle.latitude == null ||
+                    vehicle.longitude == null
+                ) {
+
+                    return;
+
+                }
+
+
+                bounds.extend({
+
+                    lat: Number(vehicle.latitude),
+                    lng: Number(vehicle.longitude)
+
+                });
+
+
+                pointCount++;
+
+            });
+
+
+        /*
+            Nothing with real coordinates yet -
+            leave the map on its current/fallback
+            view instead of fitting to an empty
+            bounds (which would zoom in on 0,0).
+        */
+
+        if (pointCount === 0) {
+
+            return;
+
+        }
+
+
+        if (pointCount === 1) {
+
+            /*
+                fitBounds on a single point zooms
+                in as far as possible (often past
+                street level), so instead center on
+                it directly and use the configured
+                zoom level.
+            */
+
+            map.setCenter(bounds.getCenter());
+
+            map.setZoom(settings.mapZoom);
+
+        } else {
+
+            map.fitBounds(bounds);
+
+        }
+
+    }
+
+
+    /* =====================================
+       LIVE TRACKING MARKERS
     ===================================== */
 
     function updateTrackingMarkers() {
@@ -4835,7 +6911,7 @@
                         <div style="padding:10px">
 
                             <h3>
-                                🚛 LIVE VEHICLE
+                                Live Vehicle
                             </h3>
 
                             <br>
@@ -4888,8 +6964,6 @@
 
 
             /*
-                ⭐ THIS IS THE IMPORTANT PART.
-
                 Every time new latitude/longitude
                 arrives, the marker moves.
             */
@@ -4916,11 +6990,19 @@
 
         updateSelectedVehicleInfo();
 
+        /*
+            Redraw the route to the
+            assigned bin (if any) for the
+            selected vehicle.
+        */
+
+        updateAssignmentRoute();
+
     }
 
 
     /* =====================================
-       ⭐ STOP LIVE TRACKING
+       STOP LIVE TRACKING
     ===================================== */
 
     function stopLiveTracking() {
@@ -4937,6 +7019,24 @@
         trackingMarkers = [];
 
 
+        if (assignmentPolyline) {
+
+            assignmentPolyline.setMap(null);
+
+            assignmentPolyline = null;
+
+        }
+
+
+        if (assignmentBinMarker) {
+
+            assignmentBinMarker.setMap(null);
+
+            assignmentBinMarker = null;
+
+        }
+
+
         const info =
             document.getElementById(
                 "selectedVehicleInfo"
@@ -4946,7 +7046,7 @@
         if (info) {
 
             info.innerHTML =
-                "🚛 No vehicle selected. Go to Vehicles and click Track Vehicle.";
+                '<span aria-hidden="true">🚛</span> No vehicle selected. Go to Vehicles and click Track Vehicle.';
 
         }
 
@@ -5151,6 +7251,8 @@
                 );
 
 
+            div.setAttribute("role", "listitem");
+
             div.style.padding =
                 "12px";
 
@@ -5160,7 +7262,7 @@
 
             div.innerHTML = `
 
-            📍
+            <span aria-hidden="true">📍</span>
 
             <strong>
                 ${bin.location ?? "-"}
@@ -5201,6 +7303,8 @@
             "true"
         );
 
+        showMessage("Larger text enabled.");
+
     }
 
 
@@ -5215,6 +7319,8 @@
             "false"
         );
 
+        showMessage("Larger text disabled.");
+
     }
 
 
@@ -5224,11 +7330,28 @@
             "dark"
         );
 
-        localStorage.setItem(
-            "darkMode",
+        const isDark =
             document.body.classList.contains(
                 "dark"
-            )
+            );
+
+
+        localStorage.setItem(
+            "darkMode",
+            isDark
+        );
+
+
+        document.getElementById(
+            "darkModeBtn"
+        ).setAttribute(
+            "aria-pressed",
+            String(isDark)
+        );
+
+
+        showMessage(
+            isDark ? "Dark mode enabled." : "Dark mode disabled."
         );
 
     }
@@ -5240,11 +7363,28 @@
             "high-contrast"
         );
 
-        localStorage.setItem(
-            "highContrast",
+        const isHighContrast =
             document.body.classList.contains(
                 "high-contrast"
-            )
+            );
+
+
+        localStorage.setItem(
+            "highContrast",
+            isHighContrast
+        );
+
+
+        document.getElementById(
+            "highContrastBtn"
+        ).setAttribute(
+            "aria-pressed",
+            String(isHighContrast)
+        );
+
+
+        showMessage(
+            isHighContrast ? "High contrast enabled." : "High contrast disabled."
         );
 
     }
@@ -5309,6 +7449,10 @@
                 "dark"
             );
 
+            document.getElementById(
+                "darkModeBtn"
+            ).setAttribute("aria-pressed", "true");
+
         }
 
 
@@ -5321,6 +7465,10 @@
             document.body.classList.add(
                 "high-contrast"
             );
+
+            document.getElementById(
+                "highContrastBtn"
+            ).setAttribute("aria-pressed", "true");
 
         }
 
