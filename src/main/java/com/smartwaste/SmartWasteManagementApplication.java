@@ -1,8 +1,12 @@
 package com.smartwaste;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class SmartWasteManagementApplication {
 
     public static void main(String[] args) {
-        System.out.println("SmartWasteManagement is starting...");
+        SpringApplication.run(SmartWasteManagementApplication.class, args);
     }
 }
